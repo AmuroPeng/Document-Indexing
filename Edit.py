@@ -5,16 +5,17 @@ import logging
 import logging.config
 import pprint
 
+
 # logging.config.fileConfig("logging.conf")  # 采用配置文件
-logger = logging.getLogger("simpleExample")  # create logger
+# logger = logging.getLogger("simpleExample")  # create logger
 
 
 def open_file(location):
     f = open(location, 'r')
     lines = f.readlines()
     f.close()
+    print('已打开项目' + location)  # testing
     return (lines)
-    logger.debug('已打开项目' + a)  # testing
 
 
 def new_file():
@@ -29,14 +30,15 @@ def new_file():
     fcontent = open(fname, 'w')
     # fcontent.write(a)
     fcontent.close()
-    logger.debug('已新建项目' + fname)  # testing
+    print('已新建项目:' + fname)  # testing
+    return fname
 
 
 def save_file(content, location):
-    f = open(location, 'wb')
-    f.write(content)
+    f = open(location, 'w')
+    f.write(str(content))
     f.close()
-    logger.debug('已保存项目' + location)  # testing
+    print('已保存项目:' + location)  # testing
 
 
 def search_file(f, word):
@@ -49,17 +51,17 @@ def kmp(P, T):
     t = -1
     K.append(t)  # K[0]=-1
     for k in range(1, len(P) + 1):
-        while (t >= 0 and P[t] != P[k - 1]):
+        while t >= 0 and P[t] != P[k - 1]:
             t = K[t]
         t = t + 1
         K.append(t)
-    # !!!logger.debug(' 部分比配值 表:' + K)
+    print('部分比配值:' + str(K))
 
     # 进行KMP搜索
     m = 0  # 在P中的指针
     result = []
     for i in range(0, len(T)):
-        while (m >= 0 and P[m] != T[i]):
+        while m >= 0 and P[m] != T[i]:
             m = K[m]
         m = m + 1
         if m == len(P):  # 输出
@@ -67,13 +69,13 @@ def kmp(P, T):
             m = K[m]
             result.append(i - len(P) + 2)  # 这个+2是自己试出来的..
             # print(i)
-    # logger.debug('搜索结果:' + result)
-    pprint.pprint(result)
+    print('搜索结果:' + str(result))
+    # pprint.pprint(result)
     return result
 
 
 if __name__ == "__main__":
-    new_file('unittest.txt')
-    open_file('unittest.txt')
-    save_file('mdzz','unittest.txt')
-    kmp('abcd', 'abcdabcddabcdabcd')
+    name = new_file()
+    open_file(name)
+    cotent = kmp('abcd', 'abcdabcddabcdabcd')
+    save_file(cotent, name)
