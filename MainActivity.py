@@ -3,7 +3,7 @@
 import Function
 import os
 import GUI_Main, GUI_EditFile, GUI_NewFile, GUI_SaveConfirm, GUI_SearchInput
-from PyQt5.QtWidgets import QApplication, QWidget, QToolButton, QMainWindow
+from PyQt5.QtWidgets import QApplication, QWidget, QToolButton, QMainWindow, QMessageBox
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import Qt
 import sys
@@ -20,17 +20,45 @@ class MainForm(QtWidgets.QMainWindow, GUI_Main.Ui_MainWindow):
         self.init()
 
     def init(self):
-        pass
-        # self.Open.clicked.connect(self.openfile)
-        # self.Save.clicked.connect(self.btn_open)
+        self.Open.triggered.connect(self.open_file)
+        self.New.triggered.connect(self.create_file)
         # self.SaveAs.clicked.connect(self.btn_save)
 
-    def openfile(self):
-        pass
-        filename = QFileDialog.getOpenFileName(self, "打开文件", manifest.DocLocation, "Txt files(*.txt)")
-        # "open file Dialog "为文件对话框的标题，第三个是打开的默认路径，第四个是文件类型过滤器
-        text = open(filename, 'r').read()
-        GUI_EditFile.textEdit.setText(text)#可能有错!
+    def open_file(self):
+        func = Function.Edit()
+        print(1)
+        filepath = func.open_file()
+        print(2)
+        # 显示
+        edit = EditForm(filepath)
+        edit.show()
+        edit.exec_()
+
+    def create_file(self):
+        create = NewFileForm()
+        create.show()
+        create.exec_()
+        fname = create.textNewFile.toPlainText()
+        # 检查新建文件名是否重复
+        # while True:
+        #     if os.path.exists(fname):
+        #         print("Error:'%s' already exists" % fname)
+        #         QMessageBox.information(self,  # 使用infomation信息框
+        #                                 "标题",
+        #                                 "消息",
+        #                                 QMessageBox.Yes | QMessageBox.No)
+        #         # !!!这里加入清空用户填写栏的内容,以及跳转回输入重新输入界面
+        #     else:
+        #         break
+        print(fname)
+        func = Function.Edit()
+        func.new_file(fname + ".txt")
+        # 显示编辑窗口
+        filepath = manifest.SaveTempPos + '\\' + fname + ".txt"
+        print(filepath)
+        edit = EditForm(filepath)
+        edit.show()
+        edit.exec_()
 
 
         # #保存时调出来保存成功,别用新的form,用消息窗口
@@ -40,6 +68,55 @@ class MainForm(QtWidgets.QMainWindow, GUI_Main.Ui_MainWindow):
         #                                     "消息",
         #                                     QMessageBox.Yes | QMessageBox.No)
         #     http: // blog.csdn.net / zd0303 / article / details / 50261481
+
+
+class EditForm(QtWidgets.QDialog, GUI_EditFile.Ui_Dialog):
+    def __init__(self, filepath):
+        super(EditForm, self).__init__()
+        self.setupUi(self)
+        self.retranslateUi(self)
+        self.init(filepath)
+
+    def init(self, filepath):
+        print('进入EditForm')
+        text = open(filepath, 'r').read()
+        self.textEdit.setText(text)
+        print('等待点击按钮')
+        self.pushButtonClear.clicked.connect(self.clear_text)
+        print(1)
+        self.pushButtonSave.clicked.connect(lambda: self.save_text(filepath))
+        # 这里加lambda是因为,不加的话,save_text后面带括号,就直接执行这个函数了!
+        # self.Save.clicked.connect(self.btn_open)
+        # self.SaveAs.clicked.connect(self.btn_save)
+
+    def save_text(self, filepath):
+        print("save")
+        content = self.textEdit.toPlainText()
+        # location = manifest.SaveTempPos  # 需要修改的以后
+        # fname = self.MainForm.create_file()
+        print("进入Fun函数")
+        save = Function.Edit()
+        print('文本内容为:' + content)
+        save.save_file(filepath, content)
+        print(8)
+
+    def clear_text(self):
+        self.textEdit.setText("")
+        print("cleared")
+
+
+class NewFileForm(QtWidgets.QDialog, GUI_NewFile.Ui_Dialog):
+    def __init__(self):
+        super(NewFileForm, self).__init__()
+        self.setupUi(self)
+        self.retranslateUi(self)
+        self.init()
+
+    def init(self):
+        pass
+
+    def comfirm(self):
+        text = self.textNewFile.toPlainText()
 
 
 if __name__ == "__main__":
