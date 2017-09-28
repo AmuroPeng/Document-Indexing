@@ -47,8 +47,9 @@ class Edit(QWidget):
         f.close()
         print('已保存项目:' + filepath)  # testing
 
-    def search_file(f, word):
-        print()
+    # def search_file(self,key, text):
+    #     print('进入搜索Function>搜索函数')
+    #     result=self.kmp(key,text)
 
     def kmp(P, T):
         # 制作部分匹配值表格K[]

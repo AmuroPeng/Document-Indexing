@@ -86,6 +86,7 @@ class EditForm(QtWidgets.QDialog, GUI_EditFile.Ui_Dialog):
         print(1)
         self.pushButtonSave.clicked.connect(lambda: self.save_text(filepath))
         # 这里加lambda是因为,不加的话,save_text后面带括号,就直接执行这个函数了!
+        self.pushButtonSearch.clicked.connect(self.search_text)
         # self.Save.clicked.connect(self.btn_open)
         # self.SaveAs.clicked.connect(self.btn_save)
 
@@ -104,6 +105,16 @@ class EditForm(QtWidgets.QDialog, GUI_EditFile.Ui_Dialog):
         self.textEdit.setText("")
         print("cleared")
 
+    def search_text(self):
+        search = SearchInputForm()
+        search.show()
+        search.exec_()
+        key = search.textEdit.toPlainText()
+        print('key=' + key)
+        text = self.textEdit.toPlainText()
+        result = Function.Edit.kmp(key, text);
+        print(result)
+
 
 class NewFileForm(QtWidgets.QDialog, GUI_NewFile.Ui_Dialog):
     def __init__(self):
@@ -115,8 +126,16 @@ class NewFileForm(QtWidgets.QDialog, GUI_NewFile.Ui_Dialog):
     def init(self):
         pass
 
-    def comfirm(self):
-        text = self.textNewFile.toPlainText()
+
+class SearchInputForm(QtWidgets.QDialog, GUI_SearchInput.Ui_Dialog):
+    def __init__(self):
+        super(SearchInputForm, self).__init__()
+        self.setupUi(self)
+        self.retranslateUi(self)
+        self.init()
+
+    def init(self):
+        pass
 
 
 if __name__ == "__main__":
