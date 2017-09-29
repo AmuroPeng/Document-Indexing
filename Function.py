@@ -85,6 +85,105 @@ class Edit(QWidget):
         return result
 
 
+class HuffNode(object):
+    def get_wieght(self):
+        raise NotImplementedError(
+            "The Abstract Node Class doesn't define 'get_wieght'")
+
+    def isleaf(self):
+        raise NotImplementedError(
+            "The Abstract Node Class doesn't define 'isleaf'")
+
+
+class LeafNode(HuffNode):
+    def __init__(self, value=0, freq=0, ):
+        super(LeafNode, self).__init__()
+        # 节点的值
+        self.value = value
+        self.wieght = freq
+
+    def isleaf(self):
+        return True
+
+    def get_wieght(self):
+        return self.wieght
+
+    def get_value(self):
+        return self.value
+
+
+class IntlNode(HuffNode):
+    def __init__(self, left_child=None, right_child=None):
+        super(IntlNode, self).__init__()
+
+        # 节点的值
+        self.wieght = left_child.get_wieght() + right_child.get_wieght()
+        # 节点的左右子节点
+        self.left_child = left_child
+        self.right_child = right_child
+
+    def isleaf(self):
+        return False
+
+    def get_wieght(self):
+        return self.wieght
+
+    def get_left(self):
+        return self.left_child
+
+    def get_right(self):
+        return self.right_child
+
+
+class HuffTree(object):
+    def __init__(self, flag, value=0, freq=0, left_tree=None, right_tree=None):
+
+        super(HuffTree, self).__init__()
+
+        if flag == 0:
+            self.root = LeafNode(value, freq)
+        else:
+            self.root = IntlNode(left_tree.get_root(), right_tree.get_root())
+
+    def get_root(self):
+
+        return self.root
+
+    def get_wieght(self):
+
+        return self.root.get_wieght()
+
+    def traverse_huffman_tree(self, root, code, char_freq):
+
+        if root.isleaf():
+            char_freq[root.get_value()] = code
+            print("it = %c  and  freq = %d  code = %s") % (chr(root.get_value()), root.get_wieght(), code)
+            return None
+        else:
+            self.traverse_huffman_tree(root.get_left(), code + '0', char_freq)
+            self.traverse_huffman_tree(root.get_right(), code + '1', char_freq)
+
+
+def buildHuffmanTree(list_hufftrees):
+    while len(list_hufftrees) > 1:
+        # 1. 按照weight 对huffman树进行从小到大的排序
+        list_hufftrees.sort(key=lambda x: x.get_wieght())
+
+        # 2. 跳出weight 最小的两个huffman编码树
+        temp1 = list_hufftrees[0]
+        temp2 = list_hufftrees[1]
+        list_hufftrees = list_hufftrees[2:]
+
+        # 3. 构造一个新的huffman树
+        newed_hufftree = HuffTree(1, 0, 0, temp1, temp2)
+
+        # 4. 放入到数组当中
+        list_hufftrees.append(newed_hufftree)
+
+    # last.  数组中最后剩下来的那棵树，就是构造的Huffman编码树
+    return list_hufftrees[0]
+
+
 if __name__ == "__main__":
     name = Edit.new_file()
     cotent = Edit.kmp('abcd', 'abcdabcddabcdabcd')

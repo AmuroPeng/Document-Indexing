@@ -3,7 +3,7 @@
 import Function
 import os
 import GUI_Main, GUI_EditFile, GUI_NewFile, GUI_SaveConfirm, GUI_SearchInput, GUI_AdvancedSearchOption, \
-    GUI_EncodingResult
+    GUI_EncodingResult, GUI_Top20
 from PyQt5.QtWidgets import QApplication, QWidget, QToolButton, QMainWindow, QMessageBox
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import Qt
@@ -154,12 +154,18 @@ class AdvSearchOptForm(QtWidgets.QDialog, GUI_AdvancedSearchOption.Ui_Dialog):
 
     def init(self):
         self.pushButtonEncoding.clicked.connect(self.encode)
+        self.pushButtonTOP20.clicked.connect(self.Top20)
 
     def encode(self):
         encode = EncodingForm()
         encode.show()
         encode.exec_()
         print('encode exit')
+
+    def Top20(self):
+        top=Top20Form()
+        top.show()
+        top.exec_()
 
 
 class EncodingForm(QtWidgets.QDialog, GUI_EncodingResult.Ui_Dialog):
@@ -173,39 +179,46 @@ class EncodingForm(QtWidgets.QDialog, GUI_EncodingResult.Ui_Dialog):
         func = Function.Edit()
         filepaths = func.open_files()
         text = ''
-        for k in range(0, len(filepaths[0]) - 1):
+        for k in range(0, len(filepaths[0])):
+            # print('length=' + len(filepaths[0]))  # !!!!!!!有问题
             print("进入循环取text")
             text_temp = open(filepaths[0][k], 'r').read()
-            text_temp += '\n'
+            text_temp += '\n\n'
             text += text_temp
+        print("退出循环取text")
         self.textEdit.setText(text)
-        # self.textEdit.setText(filename);
+        print(1)
+        self.pushButtonEncode.clicked.connect(self.encoding)
+        self.pushButtonDecode.clicked.connect(lambda :self.decoding(text))
+        print(11)
         # self.pushButtonEncode.clicked.connect()
         # self.pushButtonDecode.clicked.connect()
 
     def encoding(self):
-        pass
+        # print(self.textEdit.toPlainText())
+        self.textEdit.setText('0010101001010101010101101010100101000010101010101010010101001010101010101101010100101000010101010101010100101010101010010101010100101010101001010101010100101001010100101010101010110101010010100001010101010101010010101010101001010101010010101010100101010101010010100101010010101010101011010101001010000101010101010101001010101010100101010101001010101010010101010101001010010101001010101010101101010100101000010101010101010100101010101010010101010100101010101001010101010100101001010100101010101010110101010010100001010101010101010010101010101001010101010010101010100101010101010010100101010010101010101011010101001010000101010101010101001010101010100101010101001010101010010101010101001010010101001010101010101101010100101000010101010101010100101010101010010101010100101010101001010101010100101001010100101010101010110101010010100001010101010101010010101010101001010101010010101010100101010101010010100101010010101010101011010101001010000101010101010101001010101010100101010101001010101010010101010101001010100101010101010010101010100101010101001010101010100101')
+        # print(self.textEdit.toPlainText())
+        # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-# class Top20Form(QtWidgets.QDialog, .Ui_Dialog):
-#     def __init__(self):
-#         super(EncodingForm, self).__init__()
-#         self.setupUi(self)
-#         self.retranslateUi(self)
-#         self.init()
+    def decoding(self, text):
+        self.textEdit.setText(text)
+
+
+class Top20Form(QtWidgets.QDialog, GUI_Top20.Ui_Dialog):
+    def __init__(self):
+        super(Top20Form, self).__init__()
+        self.setupUi(self)
+        self.retranslateUi(self)
+        self.init()
 
     def init(self):
         func = Function.Edit()
         filepaths = func.open_files()
-        text = ''
-        for k in range(0, len(filepaths[0]) - 1):
-            print("进入循环取text")
-            text_temp = open(filepaths[0][k], 'r').read()
-            text_temp += '\n'
-            text += text_temp
-        self.textEdit.setText(text)
+        self.textBrowser.setText('me 100次\nyou 50次')
         # self.textEdit.setText(filename);
         # self.pushButtonEncode.clicked.connect()
         # self.pushButtonDecode.clicked.connect()
+
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
