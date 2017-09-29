@@ -2,7 +2,8 @@
 
 import Function
 import os
-import GUI_Main, GUI_EditFile, GUI_NewFile, GUI_SaveConfirm, GUI_SearchInput
+import GUI_Main, GUI_EditFile, GUI_NewFile, GUI_SaveConfirm, GUI_SearchInput, GUI_AdvancedSearchOption, \
+    GUI_EncodingResult
 from PyQt5.QtWidgets import QApplication, QWidget, QToolButton, QMainWindow, QMessageBox
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import Qt
@@ -22,7 +23,8 @@ class MainForm(QtWidgets.QMainWindow, GUI_Main.Ui_MainWindow):
     def init(self):
         self.Open.triggered.connect(self.open_file)
         self.New.triggered.connect(self.create_file)
-        # self.SaveAs.clicked.connect(self.btn_save)
+        self.AdvancedSearchButton.clicked.connect(self.adv_search)
+        # self..clicked.connect(self.btn_save)
 
     def open_file(self):
         func = Function.Edit()
@@ -59,6 +61,11 @@ class MainForm(QtWidgets.QMainWindow, GUI_Main.Ui_MainWindow):
         edit = EditForm(filepath)
         edit.show()
         edit.exec_()
+
+    def adv_search(self):
+        adv_search = AdvSearchOptForm()
+        adv_search.show()
+        adv_search.exec_()
 
 
         # #保存时调出来保存成功,别用新的form,用消息窗口
@@ -137,6 +144,68 @@ class SearchInputForm(QtWidgets.QDialog, GUI_SearchInput.Ui_Dialog):
     def init(self):
         pass
 
+
+class AdvSearchOptForm(QtWidgets.QDialog, GUI_AdvancedSearchOption.Ui_Dialog):
+    def __init__(self):
+        super(AdvSearchOptForm, self).__init__()
+        self.setupUi(self)
+        self.retranslateUi(self)
+        self.init()
+
+    def init(self):
+        self.pushButtonEncoding.clicked.connect(self.encode)
+
+    def encode(self):
+        encode = EncodingForm()
+        encode.show()
+        encode.exec_()
+        print('encode exit')
+
+
+class EncodingForm(QtWidgets.QDialog, GUI_EncodingResult.Ui_Dialog):
+    def __init__(self):
+        super(EncodingForm, self).__init__()
+        self.setupUi(self)
+        self.retranslateUi(self)
+        self.init()
+
+    def init(self):
+        func = Function.Edit()
+        filepaths = func.open_files()
+        text = ''
+        for k in range(0, len(filepaths[0]) - 1):
+            print("进入循环取text")
+            text_temp = open(filepaths[0][k], 'r').read()
+            text_temp += '\n'
+            text += text_temp
+        self.textEdit.setText(text)
+        # self.textEdit.setText(filename);
+        # self.pushButtonEncode.clicked.connect()
+        # self.pushButtonDecode.clicked.connect()
+
+    def encoding(self):
+        pass
+
+# class Top20Form(QtWidgets.QDialog, .Ui_Dialog):
+#     def __init__(self):
+#         super(EncodingForm, self).__init__()
+#         self.setupUi(self)
+#         self.retranslateUi(self)
+#         self.init()
+
+    def init(self):
+        func = Function.Edit()
+        filepaths = func.open_files()
+        text = ''
+        for k in range(0, len(filepaths[0]) - 1):
+            print("进入循环取text")
+            text_temp = open(filepaths[0][k], 'r').read()
+            text_temp += '\n'
+            text += text_temp
+        self.textEdit.setText(text)
+        # self.textEdit.setText(filename);
+        # self.pushButtonEncode.clicked.connect()
+        # self.pushButtonDecode.clicked.connect()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

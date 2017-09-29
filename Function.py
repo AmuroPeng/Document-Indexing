@@ -31,6 +31,11 @@ class Edit(QWidget):
         print(filename)
         return filename[0]
 
+    def open_files(self):
+        filename = QFileDialog.getOpenFileNames(self, "打开文件", manifest.DocLocation, "Txt files(*.txt)")
+        print(filename)
+        return filename
+
     def new_file(self, fname):
         fcontent = open(fname, 'w')
         # fcontent.write(a)
