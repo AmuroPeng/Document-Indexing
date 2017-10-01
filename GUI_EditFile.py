@@ -30,14 +30,18 @@ class Ui_Dialog(object):
         self.pushButtonSearch = QtWidgets.QPushButton(Dialog)
         self.pushButtonSearch.setGeometry(QtCore.QRect(340, 10, 41, 31))
         self.pushButtonSearch.setObjectName("pushButtonSearch")
+        self.pushButtonSubstitute = QtWidgets.QPushButton(Dialog)
+        self.pushButtonSubstitute.setGeometry(QtCore.QRect(340, 60, 41, 31))
+        self.pushButtonSubstitute.setObjectName("pushButtonSubstitute")
 
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
-        Dialog.setWindowTitle(_translate("Dialog", "编辑文件"))
+        Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
         self.pushButtonClear.setText(_translate("Dialog", "清空"))
         self.pushButtonSave.setText(_translate("Dialog", "保存"))
         self.pushButtonSearch.setText(_translate("Dialog", "🔍"))
+        self.pushButtonSubstitute.setText(_translate("Dialog", "替换"))
 

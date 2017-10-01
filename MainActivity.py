@@ -94,6 +94,8 @@ class EditForm(QtWidgets.QDialog, GUI_EditFile.Ui_Dialog):
         self.pushButtonSave.clicked.connect(lambda: self.save_text(filepath))
         # 这里加lambda是因为,不加的话,save_text后面带括号,就直接执行这个函数了!
         self.pushButtonSearch.clicked.connect(self.search_text)
+        # key=self.search_text()
+        #!!!!! self.pushButtonSubstitute.clicked.connect(lambda :self.substitute_text(key))
         # self.Save.clicked.connect(self.btn_open)
         # self.SaveAs.clicked.connect(self.btn_save)
 
@@ -121,6 +123,12 @@ class EditForm(QtWidgets.QDialog, GUI_EditFile.Ui_Dialog):
         text = self.textEdit.toPlainText()
         result = Function.Edit.kmp(key, text);
         print(result)
+        return key
+
+    def substitute_text(self,key):
+        text=self.textEdit.toPlainText()
+        text_new=self.textEdit.toPlainText().replace(key,text)
+        print('已替换'+key)
 
 
 class NewFileForm(QtWidgets.QDialog, GUI_NewFile.Ui_Dialog):
@@ -177,15 +185,15 @@ class EncodingForm(QtWidgets.QDialog, GUI_EncodingResult.Ui_Dialog):
 
     def init(self):
         func = Function.Edit()
-        filepaths = func.open_files()
-        text = ''
-        for k in range(0, len(filepaths[0])):
-            # print('length=' + len(filepaths[0]))  # !!!!!!!有问题
-            print("进入循环取text")
-            text_temp = open(filepaths[0][k], 'r').read()
-            text_temp += '\n\n'
-            text += text_temp
-        print("退出循环取text")
+        filepaths = func.open_file()
+        text = open(filepaths, 'r').read()
+        # for k in range(0, len(filepaths[0])):
+        #     # print('length=' + len(filepaths[0]))  # !!!!!!!有问题
+        #     print("进入循环取text")
+        #     text_temp = open(filepaths[0][k], 'r').read()
+        #     text_temp += '\n\n'
+        #     text += text_temp
+        # print("退出循环取text")
         self.textEdit.setText(text)
         print(1)
         self.pushButtonEncode.clicked.connect(self.encoding)
@@ -196,7 +204,7 @@ class EncodingForm(QtWidgets.QDialog, GUI_EncodingResult.Ui_Dialog):
 
     def encoding(self):
         # print(self.textEdit.toPlainText())
-        self.textEdit.setText('0010101001010101010101101010100101000010101010101010010101001010101010101101010100101000010101010101010100101010101010010101010100101010101001010101010100101001010100101010101010110101010010100001010101010101010010101010101001010101010010101010100101010101010010100101010010101010101011010101001010000101010101010101001010101010100101010101001010101010010101010101001010010101001010101010101101010100101000010101010101010100101010101010010101010100101010101001010101010100101001010100101010101010110101010010100001010101010101010010101010101001010101010010101010100101010101010010100101010010101010101011010101001010000101010101010101001010101010100101010101001010101010010101010101001010010101001010101010101101010100101000010101010101010100101010101010010101010100101010101001010101010100101001010100101010101010110101010010100001010101010101010010101010101001010101010010101010100101010101010010100101010010101010101011010101001010000101010101010101001010101010100101010101001010101010010101010101001010100101010101010010101010100101010101001010101010100101')
+        self.textEdit.setText(manifest.TemtEncoding)
         # print(self.textEdit.toPlainText())
         # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
