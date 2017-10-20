@@ -1,15 +1,17 @@
-# coding=utf-8
+# coding=utf-8`
 
 import Function
 import os
-import GUI_Main, GUI_EditFile, GUI_NewFile, GUI_SaveConfirm, GUI_SearchInput, GUI_AdvancedSearchOption, \
+import GUI_Main, GUI_EditFile, GUI_NewFile, GUI_SaveConfirm, GUI_Search_Substitute, GUI_AdvancedSearchOption, \
     GUI_EncodingResult, GUI_Top20
 from PyQt5.QtWidgets import QApplication, QWidget, QToolButton, QMainWindow, QMessageBox
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QFont, QIcon, QColor, QKeySequence, QSyntaxHighlighter, QTextCharFormat, QTextCursor
 import sys
 import manifest
 from PyQt5 import QtWidgets
+from PyQt5 import QtGui, QtCore
 from PyQt5.QtWidgets import QFileDialog
 
 
@@ -28,9 +30,7 @@ class MainForm(QtWidgets.QMainWindow, GUI_Main.Ui_MainWindow):
 
     def open_file(self):
         func = Function.Edit()
-        print(1)
         filepath = func.open_file()
-        print(2)
         # 显示
         edit = EditForm(filepath)
         edit.show()
@@ -90,14 +90,13 @@ class EditForm(QtWidgets.QDialog, GUI_EditFile.Ui_Dialog):
         self.textEdit.setText(text)
         print('等待点击按钮')
         self.pushButtonClear.clicked.connect(self.clear_text)
-        print(1)
         self.pushButtonSave.clicked.connect(lambda: self.save_text(filepath))
         # 这里加lambda是因为,不加的话,save_text后面带括号,就直接执行这个函数了!
         self.pushButtonSearch.clicked.connect(self.search_text)
         # key=self.search_text()
-        #!!!!! self.pushButtonSubstitute.clicked.connect(lambda :self.substitute_text(key))
+        # !!!!! self.pushButtonSubstitute.clicked.connect(lambda :self.substitute_text(key))
         # self.Save.clicked.connect(self.btn_open)
-        # self.SaveAs.clicked.connect(self.btn_save)
+        # self.SaveAs.Led.connect(self.btn_save)
 
     def save_text(self, filepath):
         print("save")
@@ -108,27 +107,23 @@ class EditForm(QtWidgets.QDialog, GUI_EditFile.Ui_Dialog):
         save = Function.Edit()
         print('文本内容为:' + content)
         save.save_file(filepath, content)
-        print(8)
 
     def clear_text(self):
         self.textEdit.setText("")
         print("cleared")
 
     def search_text(self):
-        search = SearchInputForm()
+        print("进入search方法")
+        search = Search_SubstituteForm(self)
         search.show()
         search.exec_()
-        key = search.textEdit.toPlainText()
-        print('key=' + key)
-        text = self.textEdit.toPlainText()
-        result = Function.Edit.kmp(key, text);
-        print(result)
+        key = 1111111
         return key
 
-    def substitute_text(self,key):
-        text=self.textEdit.toPlainText()
-        text_new=self.textEdit.toPlainText().replace(key,text)
-        print('已替换'+key)
+    def substitute_text(self, key):
+        text = self.textEdit.toPlainText()
+        text_new = self.textEdit.toPlainText().replace(key, text)
+        print('已替换' + key)
 
 
 class NewFileForm(QtWidgets.QDialog, GUI_NewFile.Ui_Dialog):
@@ -142,15 +137,49 @@ class NewFileForm(QtWidgets.QDialog, GUI_NewFile.Ui_Dialog):
         pass
 
 
-class SearchInputForm(QtWidgets.QDialog, GUI_SearchInput.Ui_Dialog):
-    def __init__(self):
-        super(SearchInputForm, self).__init__()
+class Search_SubstituteForm(QtWidgets.QDialog, GUI_Search_Substitute.Ui_Dialog):
+    def __init__(self, editForm):
+        super(Search_SubstituteForm, self).__init__()
         self.setupUi(self)
         self.retranslateUi(self)
-        self.init()
+        self.init(editForm)
 
-    def init(self):
-        pass
+    def init(self, editForm):
+        print("进入搜索替换Form")
+        num = 0
+        self.pushButton_searchNext.clicked.connect(lambda: self.search(num, editForm))
+
+    def search(self, num, editform):
+        key = self.lineEdit_searchContent.text()
+        text = editform.textEdit.toPlainText()  # 得调用主函数建的实例,在用里面的参数
+        print(key + text)
+        result = Function.Edit.kmp(key, text)
+        print('搜索内容:' + key + '\n结果:' + str(result))
+        # Function.Display.highlight(key, result, editform)
+        print(162)
+        if key:
+            cursor = editform.textEdit.textCursor()  # 光标
+            print(164)
+            # Setup the desired format for matches
+            format = QtGui.QTextCharFormat()
+            format.setBackground(QtGui.QBrush(QtGui.QColor("yellow")))
+            # Setup the regex engine
+            # regex = QtCore.QRegExp(pattern)
+            # Process the displayed document
+            pos = 0
+            # index = regex.indexIn(text, pos)
+            print(171)
+            while pos != len(result) - 1:
+                # Select the matched text and apply the desired format
+                cursor.setPosition(result[pos] - 1)  # 不懂为什么得减1,不减就错位了
+                for i in range(len(key)):
+                    cursor.movePosition(QtGui.QTextCursor.Right, 1)
+                cursor.mergeCharFormat(format)
+                pos = pos + 1
+                # Move to the next match
+                # pos = index + regex.matchedLength()
+                # index = regex.indexIn(text, pos)
+        print(161)
 
 
 class AdvSearchOptForm(QtWidgets.QDialog, GUI_AdvancedSearchOption.Ui_Dialog):
@@ -171,7 +200,7 @@ class AdvSearchOptForm(QtWidgets.QDialog, GUI_AdvancedSearchOption.Ui_Dialog):
         print('encode exit')
 
     def Top20(self):
-        top=Top20Form()
+        top = Top20Form()
         top.show()
         top.exec_()
 
@@ -197,7 +226,7 @@ class EncodingForm(QtWidgets.QDialog, GUI_EncodingResult.Ui_Dialog):
         self.textEdit.setText(text)
         print(1)
         self.pushButtonEncode.clicked.connect(self.encoding)
-        self.pushButtonDecode.clicked.connect(lambda :self.decoding(text))
+        self.pushButtonDecode.clicked.connect(lambda: self.decoding(text))
         print(11)
         # self.pushButtonEncode.clicked.connect()
         # self.pushButtonDecode.clicked.connect()

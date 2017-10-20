@@ -4,12 +4,12 @@ import os
 import logging
 import logging.config
 import pprint
-import os
 import GUI_Main, GUI_EditFile, GUI_NewFile, GUI_SaveConfirm, GUI_SearchInput
 from PyQt5.QtWidgets import QApplication, QWidget, QToolButton, QMainWindow, QMessageBox
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import Qt
 import sys
+from PyQt5 import QtGui, QtCore
 import manifest
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QFileDialog
@@ -83,6 +83,53 @@ class Edit(QWidget):
         print('搜索结果:' + str(result))
         # pprint.pprint(result)
         return result
+
+
+class Display(QWidget):
+    def highlight_re(self, pattern, text, color="red"):
+        if pattern:
+            cursor = self.textEdit.textCursor()  # 光标
+            # Setup the desired format for matches
+            format = QtGui.QTextCharFormat()
+            format.setBackground(QtGui.QBrush(QtGui.QColor(color)))
+            # Setup the regex engine
+            regex = QtCore.QRegExp(pattern)
+            # Process the displayed document
+            pos = 0
+            index = regex.indexIn(text, pos)
+            while index != -1:
+                # Select the matched text and apply the desired format
+                cursor.setPosition(index)
+                for i in range(len(pattern)):
+                    cursor.movePosition(QtGui.QTextCursor.Right, 1)
+                cursor.mergeCharFormat(format)
+                # Move to the next match
+                pos = index + regex.matchedLength()
+                index = regex.indexIn(text, pos)
+
+    def highlight(self, key, result,editform):
+        print("function111")
+        if key:
+            cursor =editform.textEdit.textCursor()  # 光标
+            # Setup the desired format for matches
+            format = QtGui.QTextCharFormat()
+            format.setBackground(QtGui.QBrush(QtGui.QColor("red")))
+            # Setup the regex engine
+            # regex = QtCore.QRegExp(pattern)
+            # Process the displayed document
+            pos = 0
+            # index = regex.indexIn(text, pos)
+            while pos != len(result) - 1:
+                # Select the matched text and apply the desired format
+                cursor.setPosition(pos)
+                for i in range(len(key)):
+                    cursor.movePosition(QtGui.QTextCursor.Right, 1)
+                    i = i + 1
+                cursor.mergeCharFormat(format)
+                pos = pos + 1
+                # Move to the next match
+                # pos = index + regex.matchedLength()
+                # index = regex.indexIn(text, pos)
 
 
 class HuffNode(object):
