@@ -117,8 +117,6 @@ class EditForm(QtWidgets.QDialog, GUI_EditFile.Ui_Dialog):
         search = Search_SubstituteForm(self)
         search.show()
         search.exec_()
-        key = 1111111
-        return key
 
     def substitute_text(self, key):
         text = self.textEdit.toPlainText()
@@ -148,18 +146,19 @@ class Search_SubstituteForm(QtWidgets.QDialog, GUI_Search_Substitute.Ui_Dialog):
         print("进入搜索替换Form")
         num = 0
         self.pushButton_searchNext.clicked.connect(lambda: self.search(num, editForm))
+        self.pushButton_allSubstitute_2.clicked.connect(lambda: self.allSubstitute(editForm))
 
     def search(self, num, editform):
+        print("ENTER Search_SubstituteForm-->search")
         key = self.lineEdit_searchContent.text()
+        self.lineEdit_searchContent_2.setText(self.lineEdit_searchContent.text())  # 将替换栏的搜索内容和查找栏一致,便于对同一个词进行多个操作
         text = editform.textEdit.toPlainText()  # 得调用主函数建的实例,在用里面的参数
         print(key + text)
         result = Function.Edit.kmp(key, text)
         print('搜索内容:' + key + '\n结果:' + str(result))
         # Function.Display.highlight(key, result, editform)
-        print(162)
         if key:
             cursor = editform.textEdit.textCursor()  # 光标
-            print(164)
             # Setup the desired format for matches
             format = QtGui.QTextCharFormat()
             format.setBackground(QtGui.QBrush(QtGui.QColor("yellow")))
@@ -168,8 +167,7 @@ class Search_SubstituteForm(QtWidgets.QDialog, GUI_Search_Substitute.Ui_Dialog):
             # Process the displayed document
             pos = 0
             # index = regex.indexIn(text, pos)
-            print(171)
-            while pos != len(result) - 1:
+            while pos != len(result):
                 # Select the matched text and apply the desired format
                 cursor.setPosition(result[pos] - 1)  # 不懂为什么得减1,不减就错位了
                 for i in range(len(key)):
@@ -179,7 +177,16 @@ class Search_SubstituteForm(QtWidgets.QDialog, GUI_Search_Substitute.Ui_Dialog):
                 # Move to the next match
                 # pos = index + regex.matchedLength()
                 # index = regex.indexIn(text, pos)
-        print(161)
+        print("CLOSE Search_SubstituteForm-->search")
+
+    def allSubstitute(self, editform):
+        print("ENTER Search_SubstituteForm-->allSubstitute")
+        old = self.lineEdit_searchContent_2.text()
+        self.lineEdit_searchContent.setText(self.lineEdit_searchContent_2.text())  # 同上面方法中的查找,便于多部操作搜索值
+        new = self.lineEdit_substituteContent_2.text()
+        text = editform.textEdit.toPlainText()
+        editform.textEdit.setText(text.replace(old, new))  # text做replace之后,本身是不变的,只是传一个改变后的值而已
+        print("CLOSE Search_SubstituteForm-->allSubstitute")
 
 
 class AdvSearchOptForm(QtWidgets.QDialog, GUI_AdvancedSearchOption.Ui_Dialog):
