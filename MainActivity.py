@@ -13,6 +13,14 @@ import manifest
 from PyQt5 import QtWidgets
 from PyQt5 import QtGui, QtCore
 from PyQt5.QtWidgets import QFileDialog
+from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtCore import QRect, QSize, QMetaObject, QCoreApplication, \
+    QPropertyAnimation
+from PyQt5.QtGui import QFont
+from PyQt5.QtWidgets import QFileDialog
+from PyQt5.QtWidgets import QWidget, QHBoxLayout, QGridLayout, QPushButton, \
+    QApplication, QMainWindow
 
 
 class MainForm(QtWidgets.QMainWindow, GUI_Main.Ui_MainWindow):
@@ -25,8 +33,13 @@ class MainForm(QtWidgets.QMainWindow, GUI_Main.Ui_MainWindow):
     def init(self):
         self.Open.triggered.connect(self.open_file)
         self.New.triggered.connect(self.create_file)
-        self.AdvancedSearchButton.clicked.connect(self.adv_search)
+        # self.AdvancedSearchButton.clicked.connect(self.adv_search)
         # self..clicked.connect(self.btn_save)
+        # pushbutton = QtGui.QPushButton('Popup Button')
+        menu = QtWidgets.QMenu()
+        menu.addAction('编码&译码   ', self.advsearch_encode)  # 不知道怎么左对齐,暂时先加空格来手动居中了_(:з」∠)_
+        menu.addAction('Top 20   ', self.advsearch_Top20)
+        self.AdvancedSearchButton.setMenu(menu)
 
     def open_file(self):
         func = Function.Edit()
@@ -63,10 +76,23 @@ class MainForm(QtWidgets.QMainWindow, GUI_Main.Ui_MainWindow):
         edit.exec_()
 
     def adv_search(self):
-        adv_search = AdvSearchOptForm()
-        adv_search.show()
-        adv_search.exec_()
+        pass
+        # self.setCentralWidget(pushbutton)
+        # self.resize(200, 30)
 
+    def advsearch_encode(self):
+        print('MainForm >>>>> advsearch_encode')
+        encode = EncodingForm()
+        encode.show()
+        encode.exec_()
+        print('MainForm <<<<< advsearch_encode')
+
+    def advsearch_Top20(self):
+        print('MainForm >>>>> advsearch_Top20')
+        top = Top20Form()
+        top.show()
+        top.exec_()
+        print('MainForm <<<<< advsearch_Top20')
 
         # #保存时调出来保存成功,别用新的form,用消息窗口
         # def msg(self):
@@ -258,10 +284,16 @@ class Top20Form(QtWidgets.QDialog, GUI_Top20.Ui_Dialog):
     def init(self):
         func = Function.Edit()
         filepaths = func.open_files()
-        self.textBrowser.setText('me 100次\nyou 50次')
+        print(287)
+        file_dic = {filepaths[i]: open(filepaths[i], 'r').read() for i in range(len(filepaths))}
+        print(289)
+        self.textBrowser.setText(str(file_dic))
         # self.textEdit.setText(filename);
         # self.pushButtonEncode.clicked.connect()
         # self.pushButtonDecode.clicked.connect()
+
+    def count(self):
+        pass
 
 
 if __name__ == "__main__":
