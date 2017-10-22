@@ -9,6 +9,8 @@ from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont, QIcon, QColor, QKeySequence, QSyntaxHighlighter, QTextCharFormat, QTextCursor
 import sys
+import time
+import re
 import manifest
 from PyQt5 import QtWidgets
 from PyQt5 import QtGui, QtCore
@@ -20,7 +22,7 @@ from PyQt5.QtCore import QRect, QSize, QMetaObject, QCoreApplication, \
 from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import QFileDialog
 from PyQt5.QtWidgets import QWidget, QHBoxLayout, QGridLayout, QPushButton, \
-    QApplication, QMainWindow
+    QApplication, QMainWindow, QTableWidget
 
 
 class MainForm(QtWidgets.QMainWindow, GUI_Main.Ui_MainWindow):
@@ -88,11 +90,11 @@ class MainForm(QtWidgets.QMainWindow, GUI_Main.Ui_MainWindow):
         print('MainForm <<<<< advsearch_encode')
 
     def advsearch_Top20(self):
-        print('MainForm >>>>> advsearch_Top20')
+        print('MainForm >>>>> Top20Form')
         top = Top20Form()
         top.show()
         top.exec_()
-        print('MainForm <<<<< advsearch_Top20')
+        print('MainForm <<<<< Top20Form')
 
         # #保存时调出来保存成功,别用新的form,用消息窗口
         # def msg(self):
@@ -215,27 +217,29 @@ class Search_SubstituteForm(QtWidgets.QDialog, GUI_Search_Substitute.Ui_Dialog):
         print("CLOSE Search_SubstituteForm-->allSubstitute")
 
 
-class AdvSearchOptForm(QtWidgets.QDialog, GUI_AdvancedSearchOption.Ui_Dialog):
-    def __init__(self):
-        super(AdvSearchOptForm, self).__init__()
-        self.setupUi(self)
-        self.retranslateUi(self)
-        self.init()
-
-    def init(self):
-        self.pushButtonEncoding.clicked.connect(self.encode)
-        self.pushButtonTOP20.clicked.connect(self.Top20)
-
-    def encode(self):
-        encode = EncodingForm()
-        encode.show()
-        encode.exec_()
-        print('encode exit')
-
-    def Top20(self):
-        top = Top20Form()
-        top.show()
-        top.exec_()
+# class AdvSearchOptForm(QtWidgets.QDialog, GUI_AdvancedSearchOption.Ui_Dialog):
+#     def __init__(self):
+#         super(AdvSearchOptForm, self).__init__()
+#         self.setupUi(self)
+#         self.retranslateUi(self)
+#         self.init()
+#
+#     def init(self):
+#         self.pushButtonEncoding.clicked.connect(self.encode)
+#         self.pushButtonTOP20.clicked.connect(self.Top20)
+#
+#     def encode(self):
+#         encode = EncodingForm()
+#         encode.show()
+#         encode.exec_()
+#         print('encode exit')
+#
+#     def Top20(self):
+#         print('MainForm >>>>> Top20Form')
+#         top = Top20Form()
+#         top.show()
+#         top.exec_()
+#         print('MainForm <<<<< Top20Form')
 
 
 class EncodingForm(QtWidgets.QDialog, GUI_EncodingResult.Ui_Dialog):
@@ -284,10 +288,28 @@ class Top20Form(QtWidgets.QDialog, GUI_Top20.Ui_Dialog):
     def init(self):
         func = Function.Edit()
         filepaths = func.open_files()
-        print(287)
         file_dic = {filepaths[i]: open(filepaths[i], 'r').read() for i in range(len(filepaths))}
-        print(289)
-        self.textBrowser.setText(str(file_dic))
+        print(time.strftime("%M%S"))
+        text = ''
+        # 把选的文章放在一个text里
+        for i in file_dic:
+            text += file_dic[i]
+        text = re.sub(r'[.?!,""></]', ' ', text)  # 去除逗号句号
+        dic = {}
+        for word in text.split(' '):  # 省的实例化split之后的list了,这个好厉害_(:з」∠)_
+            dic.setdefault(word.lower(), 0)  # lower 不区分大小写  setdefault 如果该key没有value则设为默认值0
+            dic[word.lower()] += 1
+        list_sorted = list(sorted(dic.items(), key=lambda d: d[1], reverse=True))  # dict没法选择第几项,所以转成list再操作好了
+        _translate = QtCore.QCoreApplication.translate
+        for i in range(1, 20):
+            item = self.tableWidget_Freq.item(i - 1, 0)  # 需要在设计ui时初始化每个item的值,要不然就报错不知道为啥_(:з」∠)_
+            item.setText(_translate("Dialog", str(list_sorted[i][0])))  # 第一项是''空的,而且pop不掉,不知道为什么
+            item = self.tableWidget_Freq.item(i - 1, 1)
+            item.setText(_translate("Dialog", str(list_sorted[i][1])))
+            # self.tableWidget_Freq.setItem(i, 0, QTableWidgetItem=list_sorted[i][0])
+            # self.tableWidget_Freq.setItem(i, 1, QTableWidgetItem=list_sorted[i][1])
+        self.textBrowser.setText(str(list_sorted))
+        print(time.strftime("%M%S"))
         # self.textEdit.setText(filename);
         # self.pushButtonEncode.clicked.connect()
         # self.pushButtonDecode.clicked.connect()
