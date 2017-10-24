@@ -13,6 +13,7 @@ from PyQt5 import QtGui, QtCore
 import manifest
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QFileDialog
+import re
 
 
 # logging.config.fileConfig("logging.conf")  # 采用配置文件
@@ -107,10 +108,10 @@ class Display(QWidget):
                 pos = index + regex.matchedLength()
                 index = regex.indexIn(text, pos)
 
-    def highlight(self, key, result,editform):
+    def highlight(self, key, result, editform):
         print("function111")
         if key:
-            cursor =editform.textEdit.textCursor()  # 光标
+            cursor = editform.textEdit.textCursor()  # 光标
             # Setup the desired format for matches
             format = QtGui.QTextCharFormat()
             format.setBackground(QtGui.QBrush(QtGui.QColor("red")))
@@ -119,7 +120,7 @@ class Display(QWidget):
             # Process the displayed document
             pos = 0
             # index = regex.indexIn(text, pos)
-            while pos != len(result) - 1:
+            while pos != len(result) - 1:#不清楚为啥错着一位,
                 # Select the matched text and apply the desired format
                 cursor.setPosition(pos)
                 for i in range(len(key)):
@@ -130,6 +131,32 @@ class Display(QWidget):
                 # Move to the next match
                 # pos = index + regex.matchedLength()
                 # index = regex.indexIn(text, pos)
+
+
+class Calculate(QWidget):
+    def frequency_to_str(self, text, split_key):
+        print('调用Function.Calculate >>>>> frequency')
+        text = re.sub(r'[.?!,""></]', ' ', text)  # 去除逗号句号
+        dic = {}
+        for word in text.split(split_key):  # 省的实例化split之后的list了,这个好厉害_(:з」∠)_
+            print(1)
+            dic.setdefault(word.lower(), 0)  # lower 不区分大小写  setdefault 如果该key没有value则设为默认值0
+            dic[word.lower()] += 1
+        list_sorted = list(sorted(dic.items(), key=lambda d: d[1], reverse=True))  # dict没法选择第几项,所以转成list再操作好了
+        del list_sorted[0]  # 第一项是''空的,不知道为啥
+        print('Function.Calculate <<<<< frequency')
+        return list_sorted
+
+    def frequency_to_char(self, text):
+        print('调用Function.Calculate >>>>> frequency')
+        dic = {}
+        for word in list(text):
+            dic.setdefault(word, 0)  # lower 不区分大小写  setdefault 如果该key没有value则设为默认值0
+            dic[word] += 1
+        list_sorted = list(sorted(dic.items(), key=lambda d: d[1], reverse=True))  # dict没法选择第几项,所以转成list再操作好了
+        del list_sorted[0]  # 第一项是''空的,不知道为啥
+        print('Function.Calculate <<<<< frequency')
+        return list_sorted
 
 
 class HuffNode(object):

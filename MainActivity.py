@@ -3,12 +3,16 @@
 import Function
 import os
 import GUI_Main, GUI_EditFile, GUI_NewFile, GUI_SaveConfirm, GUI_Search_Substitute, GUI_AdvancedSearchOption, \
-    GUI_EncodingResult, GUI_Top20
+    GUI_Encoding, GUI_Top20
 from PyQt5.QtWidgets import QApplication, QWidget, QToolButton, QMainWindow, QMessageBox
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont, QIcon, QColor, QKeySequence, QSyntaxHighlighter, QTextCharFormat, QTextCursor
 import sys
+from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QWidget, QApplication, QLabel, QTableWidget, QHBoxLayout, QTableWidgetItem, QComboBox, \
+    QFrame
+from PyQt5.QtGui import QFont, QColor, QBrush, QPixmap
 import time
 import re
 import manifest
@@ -242,7 +246,7 @@ class Search_SubstituteForm(QtWidgets.QDialog, GUI_Search_Substitute.Ui_Dialog):
 #         print('MainForm <<<<< Top20Form')
 
 
-class EncodingForm(QtWidgets.QDialog, GUI_EncodingResult.Ui_Dialog):
+class EncodingForm(QtWidgets.QDialog, GUI_Encoding.Ui_Dialog):
     def __init__(self):
         super(EncodingForm, self).__init__()
         self.setupUi(self)
@@ -261,18 +265,22 @@ class EncodingForm(QtWidgets.QDialog, GUI_EncodingResult.Ui_Dialog):
         #     text += text_temp
         # print("退出循环取text")
         self.textEdit.setText(text)
-        print(1)
-        self.pushButtonEncode.clicked.connect(self.encoding)
+        self.pushButtonEncode.clicked.connect(lambda: self.encoding(text))
         self.pushButtonDecode.clicked.connect(lambda: self.decoding(text))
-        print(11)
         # self.pushButtonEncode.clicked.connect()
         # self.pushButtonDecode.clicked.connect()
 
-    def encoding(self):
-        # print(self.textEdit.toPlainText())
-        self.textEdit.setText(manifest.TemtEncoding)
-        # print(self.textEdit.toPlainText())
-        # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    def encoding(self, text):
+        print('EncodingForm >>>>> encoding')
+        _func_cal = Function.Calculate()
+        list_sorted = _func_cal.frequency_to_char(text)
+        self.textEdit.setText(str(list_sorted))
+        self.tableWidget.setRowCount(len(list_sorted))
+        for i in range(len(list_sorted)):
+            self.tableWidget.setItem(i, 0, QTableWidgetItem(str(list_sorted[i][0])))
+            self.tableWidget.setItem(i, 1, QTableWidgetItem(str(list_sorted[i][1])))
+        print(self.textEdit.toPlainText())
+        print('EncodingForm <<<<< encoding')
 
     def decoding(self, text):
         self.textEdit.setText(text)
@@ -286,25 +294,21 @@ class Top20Form(QtWidgets.QDialog, GUI_Top20.Ui_Dialog):
         self.init()
 
     def init(self):
-        func = Function.Edit()
-        filepaths = func.open_files()
+        _func_edit = Function.Edit()
+        filepaths = _func_edit.open_files()
         file_dic = {filepaths[i]: open(filepaths[i], 'r').read() for i in range(len(filepaths))}
         print(time.strftime("%M%S"))
         text = ''
         # 把选的文章放在一个text里
         for i in file_dic:
             text += file_dic[i]
-        text = re.sub(r'[.?!,""></]', ' ', text)  # 去除逗号句号
-        dic = {}
-        for word in text.split(' '):  # 省的实例化split之后的list了,这个好厉害_(:з」∠)_
-            dic.setdefault(word.lower(), 0)  # lower 不区分大小写  setdefault 如果该key没有value则设为默认值0
-            dic[word.lower()] += 1
-        list_sorted = list(sorted(dic.items(), key=lambda d: d[1], reverse=True))  # dict没法选择第几项,所以转成list再操作好了
+        _func_cal = Function.Calculate()
+        list_sorted = _func_cal.frequency_to_str(text, ' ')
         _translate = QtCore.QCoreApplication.translate
-        for i in range(1, 20):
-            item = self.tableWidget_Freq.item(i - 1, 0)  # 需要在设计ui时初始化每个item的值,要不然就报错不知道为啥_(:з」∠)_
-            item.setText(_translate("Dialog", str(list_sorted[i][0])))  # 第一项是''空的,而且pop不掉,不知道为什么
-            item = self.tableWidget_Freq.item(i - 1, 1)
+        for i in range(0, 19):
+            item = self.tableWidget_Freq.item(i, 0)  # 需要在设计ui时初始化每个item的值,要不然就报错不知道为啥_(:з」∠)_
+            item.setText(_translate("Dialog", str(list_sorted[i][0])))
+            item = self.tableWidget_Freq.item(i, 1)
             item.setText(_translate("Dialog", str(list_sorted[i][1])))
             # self.tableWidget_Freq.setItem(i, 0, QTableWidgetItem=list_sorted[i][0])
             # self.tableWidget_Freq.setItem(i, 1, QTableWidgetItem=list_sorted[i][1])
