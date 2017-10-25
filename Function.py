@@ -120,7 +120,7 @@ class Display(QWidget):
             # Process the displayed document
             pos = 0
             # index = regex.indexIn(text, pos)
-            while pos != len(result) - 1:#不清楚为啥错着一位,
+            while pos != len(result) - 1:  # 不清楚为啥错着一位,
                 # Select the matched text and apply the desired format
                 cursor.setPosition(pos)
                 for i in range(len(key)):
@@ -159,105 +159,62 @@ class Calculate(QWidget):
         return list_sorted
 
 
-class HuffNode(object):
-    def get_wieght(self):
-        raise NotImplementedError(
-            "The Abstract Node Class doesn't define 'get_wieght'")
+# Tree-Node Type
+class Node:
+    def __init__(self, freq):
+        self.left = None
+        self.right = None
+        self.father = None
+        self.freq = freq
 
-    def isleaf(self):
-        raise NotImplementedError(
-            "The Abstract Node Class doesn't define 'isleaf'")
-
-
-class LeafNode(HuffNode):
-    def __init__(self, value=0, freq=0, ):
-        super(LeafNode, self).__init__()
-        # 节点的值
-        self.value = value
-        self.wieght = freq
-
-    def isleaf(self):
-        return True
-
-    def get_wieght(self):
-        return self.wieght
-
-    def get_value(self):
-        return self.value
+    def isLeft(self):
+        return self.father.left == self
 
 
-class IntlNode(HuffNode):
-    def __init__(self, left_child=None, right_child=None):
-        super(IntlNode, self).__init__()
-
-        # 节点的值
-        self.wieght = left_child.get_wieght() + right_child.get_wieght()
-        # 节点的左右子节点
-        self.left_child = left_child
-        self.right_child = right_child
-
-    def isleaf(self):
-        return False
-
-    def get_wieght(self):
-        return self.wieght
-
-    def get_left(self):
-        return self.left_child
-
-    def get_right(self):
-        return self.right_child
+# create nodes创建叶子节点
+def createNodes(freqs):
+    return [Node(freq) for freq in freqs]
 
 
-class HuffTree(object):
-    def __init__(self, flag, value=0, freq=0, left_tree=None, right_tree=None):
-
-        super(HuffTree, self).__init__()
-
-        if flag == 0:
-            self.root = LeafNode(value, freq)
-        else:
-            self.root = IntlNode(left_tree.get_root(), right_tree.get_root())
-
-    def get_root(self):
-
-        return self.root
-
-    def get_wieght(self):
-
-        return self.root.get_wieght()
-
-    def traverse_huffman_tree(self, root, code, char_freq):
-
-        if root.isleaf():
-            char_freq[root.get_value()] = code
-            print("it = %c  and  freq = %d  code = %s") % (chr(root.get_value()), root.get_wieght(), code)
-            return None
-        else:
-            self.traverse_huffman_tree(root.get_left(), code + '0', char_freq)
-            self.traverse_huffman_tree(root.get_right(), code + '1', char_freq)
+# create Huffman-Tree创建Huffman树
+def createHuffmanTree(nodes):
+    queue = nodes[:]
+    while len(queue) > 1:
+        queue.sort(key=lambda item: item.freq)
+        node_left = queue.pop(0)
+        node_right = queue.pop(0)
+        node_father = Node(node_left.freq + node_right.freq)
+        node_father.left = node_left
+        node_father.right = node_right
+        node_left.father = node_father
+        node_right.father = node_father
+        queue.append(node_father)
+    queue[0].father = None
+    return queue[0]
 
 
-def buildHuffmanTree(list_hufftrees):
-    while len(list_hufftrees) > 1:
-        # 1. 按照weight 对huffman树进行从小到大的排序
-        list_hufftrees.sort(key=lambda x: x.get_wieght())
-
-        # 2. 跳出weight 最小的两个huffman编码树
-        temp1 = list_hufftrees[0]
-        temp2 = list_hufftrees[1]
-        list_hufftrees = list_hufftrees[2:]
-
-        # 3. 构造一个新的huffman树
-        newed_hufftree = HuffTree(1, 0, 0, temp1, temp2)
-
-        # 4. 放入到数组当中
-        list_hufftrees.append(newed_hufftree)
-
-    # last.  数组中最后剩下来的那棵树，就是构造的Huffman编码树
-    return list_hufftrees[0]
+# Huffman编码
+def huffmanEncoding(nodes, root):
+    codes = [''] * len(nodes)
+    for i in range(len(nodes)):
+        node_tmp = nodes[i]
+        while node_tmp != root:
+            if node_tmp.isLeft():
+                codes[i] = '0' + codes[i]
+            else:
+                codes[i] = '1' + codes[i]
+            node_tmp = node_tmp.father
+    return codes
 
 
-if __name__ == "__main__":
-    name = Edit.new_file()
-    cotent = Edit.kmp('abcd', 'abcdabcddabcdabcd')
+if __name__ == '__main__':
+    # chars = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N']
+    # freqs = [10,4,2,5,3,4,2,6,4,4,3,7,9,6]
+    chars_freqs = [('C', 2), ('G', 2), ('E', 3), ('K', 3), ('B', 4),
+                   ('F', 4), ('I', 4), ('J', 4), ('D', 5), ('H', 6),
+                   ('N', 6), ('L', 7), ('M', 9), ('A', 10)]
+    nodes = createNodes([item[1] for item in chars_freqs])
+    root = createHuffmanTree(nodes)
+    codes = huffmanEncoding(nodes, root)
+    for item in zip(chars_freqs, codes):
+        print('Character:%s freq:%-2d   encoding: %s' % (item[0][0], item[0][1], item[1]))
