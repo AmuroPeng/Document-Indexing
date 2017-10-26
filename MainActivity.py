@@ -1,6 +1,6 @@
 # coding=utf-8`
 
-import Function
+import Function, Huffman
 import os
 import GUI_Main, GUI_EditFile, GUI_NewFile, GUI_SaveConfirm, GUI_Search_Substitute, GUI_AdvancedSearchOption, \
     GUI_Encoding, GUI_Top20
@@ -272,14 +272,24 @@ class EncodingForm(QtWidgets.QDialog, GUI_Encoding.Ui_Dialog):
 
     def encoding(self, text):
         print('EncodingForm >>>>> encoding')
+        print(text)
         _func_cal = Function.Calculate()
         list_sorted = _func_cal.frequency_to_char(text)
-        self.textEdit.setText(str(list_sorted))
+        nodes = Function.createNodes([item[1] for item in list_sorted])
+        print([item[1] for item in list_sorted])
+        root = Function.createHuffmanTree(nodes)
+        huff_code = Function.huffmanEncoding(nodes, root)
         self.tableWidget.setRowCount(len(list_sorted))
         for i in range(len(list_sorted)):
             self.tableWidget.setItem(i, 0, QTableWidgetItem(str(list_sorted[i][0])))
             self.tableWidget.setItem(i, 1, QTableWidgetItem(str(list_sorted[i][1])))
-        print(self.textEdit.toPlainText())
+            self.tableWidget.setItem(i, 2, QTableWidgetItem(str(huff_code[i])))
+        textcode = ''
+        for word in text:
+            for i in range(len(list_sorted)):
+                if word == list_sorted[i][0]:
+                    textcode += str(huff_code[i])
+        self.textEdit.setText(textcode)
         print('EncodingForm <<<<< encoding')
 
     def decoding(self, text):
@@ -317,10 +327,6 @@ class Top20Form(QtWidgets.QDialog, GUI_Top20.Ui_Dialog):
         # self.textEdit.setText(filename);
         # self.pushButtonEncode.clicked.connect()
         # self.pushButtonDecode.clicked.connect()
-
-    def count(self):
-        pass
-
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

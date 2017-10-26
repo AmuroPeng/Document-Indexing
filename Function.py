@@ -45,13 +45,11 @@ class Edit(QWidget):
         return fname
 
     def save_file(self, filepath, text):
-        print(2)
+        print('Function >>> save_file')
         f = open(filepath, 'w')
-        print(f)
         f.write(text)
-        print(4)
         f.close()
-        print('已保存项目:' + filepath)  # testing
+        print('Function <<< save_file')
 
     # def search_file(self,key, text):
     #     print('进入搜索Function>搜索函数')
@@ -214,7 +212,9 @@ if __name__ == '__main__':
                    ('F', 4), ('I', 4), ('J', 4), ('D', 5), ('H', 6),
                    ('N', 6), ('L', 7), ('M', 9), ('A', 10)]
     nodes = createNodes([item[1] for item in chars_freqs])
+    print([item[1] for item in chars_freqs])
     root = createHuffmanTree(nodes)
     codes = huffmanEncoding(nodes, root)
+    print(codes)
     for item in zip(chars_freqs, codes):
         print('Character:%s freq:%-2d   encoding: %s' % (item[0][0], item[0][1], item[1]))
