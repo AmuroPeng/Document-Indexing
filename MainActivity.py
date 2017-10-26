@@ -1,7 +1,8 @@
-# coding=utf-8`
+# -*- coding:utf-8 -*-
 
 import Function, Huffman
 import os
+import time
 import GUI_Main, GUI_EditFile, GUI_NewFile, GUI_SaveConfirm, GUI_Search_Substitute, GUI_AdvancedSearchOption, \
     GUI_Encoding, GUI_Top20
 from PyQt5.QtWidgets import QApplication, QWidget, QToolButton, QMainWindow, QMessageBox
@@ -266,7 +267,7 @@ class EncodingForm(QtWidgets.QDialog, GUI_Encoding.Ui_Dialog):
         # print("退出循环取text")
         self.textEdit.setText(text)
         self.pushButtonEncode.clicked.connect(lambda: self.encoding(text))
-        self.pushButtonDecode.clicked.connect(lambda: self.decoding(text))
+        self.pushButtonDecode.clicked.connect(self.decoding)
         # self.pushButtonEncode.clicked.connect()
         # self.pushButtonDecode.clicked.connect()
 
@@ -291,9 +292,29 @@ class EncodingForm(QtWidgets.QDialog, GUI_Encoding.Ui_Dialog):
                     textcode += str(huff_code[i])
         self.textEdit.setText(textcode)
         print('EncodingForm <<<<< encoding')
+        print(str(self.tableWidget.item(1, 2).text()))
 
-    def decoding(self, text):
-        self.textEdit.setText(text)
+    def decoding(self):
+        print('EncodingForm >>> decoding')
+        codetext = self.textEdit.toPlainText()
+        print('codetext=', codetext)
+        result = ''
+        while codetext != '':
+            for i in range(0, self.tableWidget.rowCount()):
+                huffcode = self.tableWidget.item(i, 2).text()
+                print('i',i,'     codetext',codetext[0:len(huffcode)],'     huffcode',huffcode,str(huffcode)==str(codetext))
+                # print('i',i)
+                # print('huffcode',huffcode)
+                # print('codetext',codetext[0:len(huffcode)])
+                # time.sleep(1)
+                if huffcode == codetext[0:len(huffcode)]:
+                    print('进入if')
+                    result += self.tableWidget.item(i, 0).text()
+                    print('result',result)
+                    codetext = codetext[len(huffcode):]
+                    break
+        self.textEdit.setText(result)
+        print('EncodingForm <<< decoding')
 
 
 class Top20Form(QtWidgets.QDialog, GUI_Top20.Ui_Dialog):
@@ -327,6 +348,7 @@ class Top20Form(QtWidgets.QDialog, GUI_Top20.Ui_Dialog):
         # self.textEdit.setText(filename);
         # self.pushButtonEncode.clicked.connect()
         # self.pushButtonDecode.clicked.connect()
+
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
