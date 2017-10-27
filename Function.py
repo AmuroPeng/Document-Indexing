@@ -105,7 +105,6 @@ class Calculate(QWidget):
         text = re.sub(r'[.?!,""></]', ' ', text)  # 去除逗号句号
         dic = {}
         for word in text.split(split_key):  # 省的实例化split之后的list了,这个好厉害_(:з」∠)_
-            print(1)
             dic.setdefault(word.lower(), 0)  # lower 不区分大小写  setdefault 如果该key没有value则设为默认值0
             dic[word.lower()] += 1
         list_sorted = list(sorted(dic.items(), key=lambda d: d[1], reverse=True))  # dict没法选择第几项,所以转成list再操作好了
@@ -134,7 +133,7 @@ class Calculate(QWidget):
                 t = K[t]
             t = t + 1
             K.append(t)
-        print('部分比配值:' + str(K))
+        # print('部分比配值:' + str(K))
 
         # 进行KMP搜索
         m = 0  # 在P中的指针
@@ -148,7 +147,7 @@ class Calculate(QWidget):
                 m = K[m]
                 result.append(i - len(P) + 2)  # 这个+2是自己试出来的..
                 # print(i)
-        print('搜索结果:' + str(result))
+        # print('搜索结果:' + str(result))
         # pprint.pprint(result)
         return result
 

@@ -83,16 +83,24 @@ class MainForm(QtWidgets.QMainWindow, GUI_Main.Ui_MainWindow):
         edit.exec_()
 
     def adv_search(self):
-        pass
+        # pass
         _func_edit = Function.Edit()
         filepaths = _func_edit.open_files()
         file_dic = {filepaths[i]: open(filepaths[i], 'r').read() for i in range(len(filepaths))}
-        print('时间:', time.strftime("%M%S"))
+        print('时间:', time.strftime("%H%M%S"))
         word_dic = {}
-        for k, v in file_dic:
+        for k, v in file_dic.items():
             v = re.sub(r'[.?!,""></]', ' ', v)
             for word in v.split(' '):  # 省的实例化split之后的list了,这个好厉害_(:з」∠)_
-                word_dic[word] = [k, Function.Calculate.kmp(word, v)]  # 这样可以让dict的value是list么?答:应该是可以_(:з」∠)_
+                if word == '':
+                    continue
+                else:
+                    if word not in word_dic.keys():
+                        word_dic[word] = {}
+                    kmp_list = Function.Calculate.kmp(word, v)
+                    word_dic[word][k] = kmp_list  # 这样可以让dict的value是list么?答:应该是可以_(:з」∠)_
+        print('word_dic', str(word_dic))
+        print('时间:', time.strftime("%H%M%S"))
 
     def advsearch_encode(self):
         print('MainForm >>>>> advsearch_encode')
