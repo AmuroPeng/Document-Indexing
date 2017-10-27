@@ -302,15 +302,10 @@ class EncodingForm(QtWidgets.QDialog, GUI_Encoding.Ui_Dialog):
         while codetext != '':
             for i in range(0, self.tableWidget.rowCount()):
                 huffcode = self.tableWidget.item(i, 2).text()
-                print('i',i,'     codetext',codetext[0:len(huffcode)],'     huffcode',huffcode,str(huffcode)==str(codetext))
-                # print('i',i)
-                # print('huffcode',huffcode)
-                # print('codetext',codetext[0:len(huffcode)])
-                # time.sleep(1)
                 if huffcode == codetext[0:len(huffcode)]:
-                    print('进入if')
+                    print('i', i, '     codetext', codetext[0:len(huffcode)], '     huffcode', huffcode, '    ',
+                          huffcode == codetext[0:len(huffcode)])
                     result += self.tableWidget.item(i, 0).text()
-                    print('result',result)
                     codetext = codetext[len(huffcode):]
                     break
         self.textEdit.setText(result)

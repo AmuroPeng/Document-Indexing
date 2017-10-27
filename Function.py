@@ -149,10 +149,10 @@ class Calculate(QWidget):
         print('调用Function.Calculate >>>>> frequency')
         dic = {}
         for word in list(text):
-            dic.setdefault(word, 0)  # lower 不区分大小写  setdefault 如果该key没有value则设为默认值0
+            dic.setdefault(word, 0)  # setdefault 如果该key没有value则设为默认值0
             dic[word] += 1
         list_sorted = list(sorted(dic.items(), key=lambda d: d[1], reverse=True))  # dict没法选择第几项,所以转成list再操作好了
-        del list_sorted[0]  # 第一项是''空的,不知道为啥
+        # del list_sorted[0]  # 在译码环节就要留着空格了
         print('Function.Calculate <<<<< frequency')
         return list_sorted
 
@@ -213,6 +213,7 @@ if __name__ == '__main__':
                    ('N', 6), ('L', 7), ('M', 9), ('A', 10)]
     nodes = createNodes([item[1] for item in chars_freqs])
     print([item[1] for item in chars_freqs])
+    print('nodes',nodes)
     root = createHuffmanTree(nodes)
     codes = huffmanEncoding(nodes, root)
     print(codes)
