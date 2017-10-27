@@ -40,7 +40,7 @@ class MainForm(QtWidgets.QMainWindow, GUI_Main.Ui_MainWindow):
     def init(self):
         self.Open.triggered.connect(self.open_file)
         self.New.triggered.connect(self.create_file)
-        # self.AdvancedSearchButton.clicked.connect(self.adv_search)
+        self.SearchButton.clicked.connect(self.adv_search)
         # self..clicked.connect(self.btn_save)
         # pushbutton = QtGui.QPushButton('Popup Button')
         menu = QtWidgets.QMenu()
@@ -84,8 +84,15 @@ class MainForm(QtWidgets.QMainWindow, GUI_Main.Ui_MainWindow):
 
     def adv_search(self):
         pass
-        # self.setCentralWidget(pushbutton)
-        # self.resize(200, 30)
+        _func_edit = Function.Edit()
+        filepaths = _func_edit.open_files()
+        file_dic = {filepaths[i]: open(filepaths[i], 'r').read() for i in range(len(filepaths))}
+        print('时间:', time.strftime("%M%S"))
+        word_dic = {}
+        for k, v in file_dic:
+            v = re.sub(r'[.?!,""></]', ' ', v)
+            for word in v.split(' '):  # 省的实例化split之后的list了,这个好厉害_(:з」∠)_
+                word_dic[word] = [k, Function.Calculate.kmp(word, v)]  # 这样可以让dict的value是list么?答:应该是可以_(:з」∠)_
 
     def advsearch_encode(self):
         print('MainForm >>>>> advsearch_encode')
@@ -187,7 +194,7 @@ class Search_SubstituteForm(QtWidgets.QDialog, GUI_Search_Substitute.Ui_Dialog):
         self.lineEdit_searchContent_2.setText(self.lineEdit_searchContent.text())  # 将替换栏的搜索内容和查找栏一致,便于对同一个词进行多个操作
         text = editform.textEdit.toPlainText()  # 得调用主函数建的实例,在用里面的参数
         print(key + text)
-        result = Function.Edit.kmp(key, text)
+        result = Function.Calculate.kmp(key, text)
         print('搜索内容:' + key + '\n结果:' + str(result))
         # Function.Display.highlight(key, result, editform)
         if key:
@@ -329,7 +336,7 @@ class Top20Form(QtWidgets.QDialog, GUI_Top20.Ui_Dialog):
         for i in file_dic:
             text += file_dic[i]
         _func_cal = Function.Calculate()
-        list_sorted = _func_cal.frequency_to_str(text, ' ')
+        list_sorted = _func_cal.frequency_to_str(text, ' ')  # 没有用kmp是因为不需要得到每个值的具体位置,只需要加1即可,所以kmp更麻烦
         _translate = QtCore.QCoreApplication.translate
         for i in range(0, 19):
             item = self.tableWidget_Freq.item(i, 0)  # 需要在设计ui时初始化每个item的值,要不然就报错不知道为啥_(:з」∠)_
