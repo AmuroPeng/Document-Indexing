@@ -41,6 +41,7 @@ class MainForm(QtWidgets.QMainWindow, GUI_Main.Ui_MainWindow):
         self.Open.triggered.connect(self.open_file)
         self.New.triggered.connect(self.create_file)
         self.SearchButton.clicked.connect(self.adv_search)
+        self.importItems.triggered.connect(self.import_Items)
         # self..clicked.connect(self.btn_save)
         # pushbutton = QtGui.QPushButton('Popup Button')
         menu = QtWidgets.QMenu()
@@ -83,24 +84,7 @@ class MainForm(QtWidgets.QMainWindow, GUI_Main.Ui_MainWindow):
         edit.exec_()
 
     def adv_search(self):
-        # pass
-        _func_edit = Function.Edit()
-        filepaths = _func_edit.open_files()
-        file_dic = {filepaths[i]: open(filepaths[i], 'r').read() for i in range(len(filepaths))}
-        print('时间:', time.strftime("%H%M%S"))
-        word_dic = {}
-        for k, v in file_dic.items():
-            v = re.sub(r'[.?!,""></]', ' ', v)
-            for word in v.split(' '):  # 省的实例化split之后的list了,这个好厉害_(:з」∠)_
-                if word == '':
-                    continue
-                else:
-                    if word not in word_dic.keys():
-                        word_dic[word] = {}
-                    kmp_list = Function.Calculate.kmp(word, v)
-                    word_dic[word][k] = kmp_list  # 这样可以让dict的value是list么?答:应该是可以_(:з」∠)_
-        print('word_dic', str(word_dic))
-        print('时间:', time.strftime("%H%M%S"))
+        pass
 
     def advsearch_encode(self):
         print('MainForm >>>>> advsearch_encode')
@@ -123,6 +107,34 @@ class MainForm(QtWidgets.QMainWindow, GUI_Main.Ui_MainWindow):
         #                                     "消息",
         #                                     QMessageBox.Yes | QMessageBox.No)
         #     http: // blog.csdn.net / zd0303 / article / details / 50261481
+
+    def import_Items(self):
+        print('MainForm --> importItems')
+        _func_edit = Function.Edit()
+        filepaths = _func_edit.open_files()
+        file_dic = {filepaths[i]: open(filepaths[i], 'r').read() for i in range(len(filepaths))}
+        print('时间:', time.strftime("%H%M%S"))
+        word_dic = {}
+        for k, v in file_dic.items():
+            v = re.sub(r'[.?!,""></]', ' ', v)
+            for word in v.split(' '):  # 省的实例化split之后的list了,这个好厉害_(:з」∠)_
+                if word == '':
+                    continue
+                else:
+                    if word not in word_dic.keys():
+                        word_dic[word] = {}
+                    kmp_list = Function.Calculate.kmp(word, v)
+                    word_dic[word][k] = kmp_list  # 这样可以让dict的value是list么?答:应该是可以_(:з」∠)_
+        print('word_dic', str(word_dic))
+        print('时间:', time.strftime("%H%M%S"))
+        # self.checkBox_selcetAll.setGeometry(QtCore.QRect(70, 120, 301, 21))
+        positions = [(i, j) for i in range(5) for j in range(4)]
+        for position, path in zip(positions, filepaths):
+            checkBox = QtWidgets.QCheckBox(os.path.split(path)[1], self)
+            checkBox.setCheckState(True)
+            self.Layout_Items.addWidget(checkBox, *position)
+
+        print('MainForm <-- importItems')
 
 
 class EditForm(QtWidgets.QDialog, GUI_EditFile.Ui_Dialog):

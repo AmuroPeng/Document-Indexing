@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>705</width>
-    <height>600</height>
+    <width>434</width>
+    <height>495</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -23,13 +23,13 @@
    <widget class="QWidget" name="horizontalLayoutWidget">
     <property name="geometry">
      <rect>
-      <x>90</x>
-      <y>100</y>
-      <width>519</width>
-      <height>121</height>
+      <x>60</x>
+      <y>50</y>
+      <width>311</width>
+      <height>41</height>
      </rect>
     </property>
-    <layout class="QHBoxLayout" name="horizontalLayout">
+    <layout class="QHBoxLayout" name="Layout_Search">
      <item>
       <widget class="QTextEdit" name="SearchText">
        <property name="sizePolicy">
@@ -40,8 +40,8 @@
        </property>
        <property name="minimumSize">
         <size>
-         <width>347</width>
-         <height>0</height>
+         <width>20</width>
+         <height>20</height>
         </size>
        </property>
       </widget>
@@ -62,15 +62,29 @@
      </item>
     </layout>
    </widget>
-   <widget class="QListWidget" name="listWidget">
+   <widget class="QCheckBox" name="checkBox_selcetAll">
     <property name="geometry">
      <rect>
-      <x>60</x>
-      <y>240</y>
-      <width>571</width>
-      <height>301</height>
+      <x>140</x>
+      <y>130</y>
+      <width>151</width>
+      <height>21</height>
      </rect>
     </property>
+    <property name="text">
+     <string>SELECT/UNSELECT ALL</string>
+    </property>
+   </widget>
+   <widget class="QWidget" name="gridLayoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>170</y>
+      <width>331</width>
+      <height>271</height>
+     </rect>
+    </property>
+    <layout class="QGridLayout" name="Layout_Items"/>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -78,7 +92,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>705</width>
+     <width>434</width>
      <height>23</height>
     </rect>
    </property>
@@ -98,6 +112,7 @@
     <property name="title">
      <string>查看</string>
     </property>
+    <addaction name="importItems"/>
    </widget>
    <widget class="QMenu" name="menu_settings">
     <property name="title">
@@ -167,6 +182,11 @@
   <action name="New">
    <property name="text">
     <string>新建</string>
+   </property>
+  </action>
+  <action name="importItems">
+   <property name="text">
+    <string>导入</string>
    </property>
   </action>
  </widget>
