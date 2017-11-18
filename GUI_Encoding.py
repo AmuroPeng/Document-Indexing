@@ -66,6 +66,6 @@ class Ui_Dialog(object):
         __sortingEnabled = self.tableWidget.isSortingEnabled()
         self.tableWidget.setSortingEnabled(False)
         item = self.tableWidget.item(0, 0)
-        item.setText(_translate("Dialog", "555"))
+        item.setText(_translate("Dialog", "点击'译码'按钮可查看哈夫曼编码"))
         self.tableWidget.setSortingEnabled(__sortingEnabled)
 

@@ -38,6 +38,7 @@ class MainForm(QtWidgets.QMainWindow, GUI_Main.Ui_MainWindow):
         self.init()
 
     def init(self):
+        self.checkBox_selcetAll.hide()
         self.Open.triggered.connect(self.open_file)
         self.New.triggered.connect(self.create_file)
         self.SearchButton.clicked.connect(self.adv_search)
@@ -84,7 +85,53 @@ class MainForm(QtWidgets.QMainWindow, GUI_Main.Ui_MainWindow):
         edit.exec_()
 
     def adv_search(self):
-        pass
+        print('MainForm ---> adv_search')
+        keyword = self.SearchText.toPlainText()
+        print(keyword)
+        self.tabWidget_result = QtWidgets.QTabWidget(self.centralwidget)
+        self.tabWidget_result.setGeometry(QtCore.QRect(30, 250, 381, 271))
+        self.tabWidget_result.setObjectName("tabWidget_result")
+        print(94)
+        if keyword in self.word_dic.keys():
+            for path in self.word_dic[keyword].keys():
+                self.tab_1 = QtWidgets.QWidget()
+                self.tab_1.setObjectName(str(os.path.split(path)[1]))
+                text ='abc' #open(path, 'r').read()
+                self.textBrowser = QtWidgets.QTextBrowser(self.tab_1)
+                self.textBrowser.setGeometry(QtCore.QRect(20, 20, 331, 211))
+                self.textBrowser.setObjectName(str(os.path.split(path)[1]))
+                self.textBrowser.setText(text)
+                self.tabWidget_result.addTab(self.tab_1, "")
+                _translate = QtCore.QCoreApplication.translate
+                self.textBrowser.setHtml(_translate("MainWindow",
+                                                    "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+                                                    "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+                                                    "p, li { white-space: pre-wrap; }\n"
+                                                    "</style></head><body style=\" font-family:\'SimSun\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+                                                    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">这里是文字 1</p></body></html>"))
+                self.tabWidget_result.setTabText(self.tabWidget_result.indexOf(self.tab_1),
+                                                 _translate("MainWindow", str(os.path.split(path)[1])))
+
+        print('MainForm <--- adv_search')
+
+
+
+        # self.centralwidget.setObjectName("centralwidget")
+        # self.tabWidget_result = QtWidgets.QTabWidget(self.centralwidget)
+        # self.tabWidget_result.setGeometry(QtCore.QRect(20, 150, 131, 101))
+        # self.tabWidget_result.setObjectName("tabWidget_result")
+        # self.tab = QtWidgets.QWidget()
+        # self.tab.setObjectName("tab")
+        # self.tabWidget_result.addTab(self.tab, "")
+        #
+        # self.tabWidget_result.setCurrentIndex(0)
+        #
+        #
+        # _translate = QtCore.QCoreApplication.translate
+        # self.tabWidget_result.setTabText(self.tabWidget_result.indexOf(self.tab), _translate("MainWindow", "Tab 1"))
+
+
+        print('gg')
 
     def advsearch_encode(self):
         print('MainForm >>>>> advsearch_encode')
@@ -114,26 +161,27 @@ class MainForm(QtWidgets.QMainWindow, GUI_Main.Ui_MainWindow):
         filepaths = _func_edit.open_files()
         file_dic = {filepaths[i]: open(filepaths[i], 'r').read() for i in range(len(filepaths))}
         print('时间:', time.strftime("%H%M%S"))
-        word_dic = {}
+        self.word_dic = {}
         for k, v in file_dic.items():
             v = re.sub(r'[.?!,""></]', ' ', v)
             for word in v.split(' '):  # 省的实例化split之后的list了,这个好厉害_(:з」∠)_
                 if word == '':
                     continue
                 else:
-                    if word not in word_dic.keys():
-                        word_dic[word] = {}
+                    if word not in self.word_dic.keys():
+                        self.word_dic[word] = {}
                     kmp_list = Function.Calculate.kmp(word, v)
-                    word_dic[word][k] = kmp_list  # 这样可以让dict的value是list么?答:应该是可以_(:з」∠)_
-        print('word_dic', str(word_dic))
+                    self.word_dic[word][k] = kmp_list  # 这样可以让dict的value是list么?答:应该是可以_(:з」∠)_
+        print('word_dic', str(self.word_dic))
         print('时间:', time.strftime("%H%M%S"))
         # self.checkBox_selcetAll.setGeometry(QtCore.QRect(70, 120, 301, 21))
         positions = [(i, j) for i in range(5) for j in range(4)]
         for position, path in zip(positions, filepaths):
             checkBox = QtWidgets.QCheckBox(os.path.split(path)[1], self)
+            checkBox.filepath = path
             checkBox.setCheckState(True)
             self.Layout_Items.addWidget(checkBox, *position)
-
+        self.checkBox_selcetAll.show()
         print('MainForm <-- importItems')
 
 
