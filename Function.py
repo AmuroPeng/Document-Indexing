@@ -124,6 +124,8 @@ class Calculate(QWidget):
         return list_sorted
 
     def kmp(P, T):
+
+        T = T.replace('<br />', '')
         # 制作部分匹配值表格K[]
         K = []
         t = -1

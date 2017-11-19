@@ -88,30 +88,39 @@ class MainForm(QtWidgets.QMainWindow, GUI_Main.Ui_MainWindow):
         print('MainForm ---> adv_search')
         keyword = self.SearchText.toPlainText()
         print(keyword)
-        self.tabWidget_result = QtWidgets.QTabWidget(self.centralwidget)
-        self.tabWidget_result.setGeometry(QtCore.QRect(30, 250, 381, 271))
-        self.tabWidget_result.setObjectName("tabWidget_result")
-        print(94)
+        if self.tabWidget_result.count():  # 每次点搜索需要先清空之前的tab在添加
+            for i in range(self.tabWidget_result.count()):
+                self.tabWidget_result.removeTab(i)
         if keyword in self.word_dic.keys():
             for path in self.word_dic[keyword].keys():
                 self.tab_1 = QtWidgets.QWidget()
                 self.tab_1.setObjectName(str(os.path.split(path)[1]))
-                text ='abc' #open(path, 'r').read()
+                text = open(path, 'r').read()
                 self.textBrowser = QtWidgets.QTextBrowser(self.tab_1)
                 self.textBrowser.setGeometry(QtCore.QRect(20, 20, 331, 211))
                 self.textBrowser.setObjectName(str(os.path.split(path)[1]))
                 self.textBrowser.setText(text)
+                # highlight
+                if keyword:
+                    cursor = self.textBrowser.textCursor()  # 光标
+                    format = QtGui.QTextCharFormat()
+                    format.setBackground(QtGui.QBrush(QtGui.QColor("yellow")))
+                    for pos in self.word_dic[keyword][path]:
+                        cursor.setPosition(pos - 1)  # 不懂为什么得减1,不减就错位了
+                        for i in range(len(keyword)):
+                            cursor.movePosition(QtGui.QTextCursor.Right, 1)
+                        cursor.mergeCharFormat(format)
+                # highlight
                 self.tabWidget_result.addTab(self.tab_1, "")
                 _translate = QtCore.QCoreApplication.translate
-                self.textBrowser.setHtml(_translate("MainWindow",
-                                                    "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-                                                    "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-                                                    "p, li { white-space: pre-wrap; }\n"
-                                                    "</style></head><body style=\" font-family:\'SimSun\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
-                                                    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">这里是文字 1</p></body></html>"))
+                # self.textBrowser.setHtml(_translate("MainWindow",
+                #                                     "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+                #                                     "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+                #                                     "p, li { white-space: pre-wrap; }\n"
+                #                                     "</style></head><body style=\" font-family:\'SimSun\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+                #                                     "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">text 1</p></body></html>"))
                 self.tabWidget_result.setTabText(self.tabWidget_result.indexOf(self.tab_1),
                                                  _translate("MainWindow", str(os.path.split(path)[1])))
-
         print('MainForm <--- adv_search')
 
 
@@ -129,9 +138,6 @@ class MainForm(QtWidgets.QMainWindow, GUI_Main.Ui_MainWindow):
         #
         # _translate = QtCore.QCoreApplication.translate
         # self.tabWidget_result.setTabText(self.tabWidget_result.indexOf(self.tab), _translate("MainWindow", "Tab 1"))
-
-
-        print('gg')
 
     def advsearch_encode(self):
         print('MainForm >>>>> advsearch_encode')
@@ -164,12 +170,15 @@ class MainForm(QtWidgets.QMainWindow, GUI_Main.Ui_MainWindow):
         self.word_dic = {}
         for k, v in file_dic.items():
             v = re.sub(r'[.?!,""></]', ' ', v)
+            v = re.sub(r'<br />', '    ', v)
             for word in v.split(' '):  # 省的实例化split之后的list了,这个好厉害_(:з」∠)_
                 if word == '':
                     continue
                 else:
                     if word not in self.word_dic.keys():
                         self.word_dic[word] = {}
+                    v = v.replace('<br />', '\n')  # 199_1的txt里居然有br!我都傻了,之后全是错位的!还好发现的及时
+                    v = v.replace('<br/>', '\n')
                     kmp_list = Function.Calculate.kmp(word, v)
                     self.word_dic[word][k] = kmp_list  # 这样可以让dict的value是list么?答:应该是可以_(:з」∠)_
         print('word_dic', str(self.word_dic))
@@ -263,28 +272,17 @@ class Search_SubstituteForm(QtWidgets.QDialog, GUI_Search_Substitute.Ui_Dialog):
         text = editform.textEdit.toPlainText()  # 得调用主函数建的实例,在用里面的参数
         print(key + text)
         result = Function.Calculate.kmp(key, text)
-        print('搜索内容:' + key + '\n结果:' + str(result))
+        print('搜索内容:' + key + '  结果:' + str(result))
         # Function.Display.highlight(key, result, editform)
         if key:
             cursor = editform.textEdit.textCursor()  # 光标
-            # Setup the desired format for matches
             format = QtGui.QTextCharFormat()
             format.setBackground(QtGui.QBrush(QtGui.QColor("yellow")))
-            # Setup the regex engine
-            # regex = QtCore.QRegExp(pattern)
-            # Process the displayed document
-            pos = 0
-            # index = regex.indexIn(text, pos)
-            while pos != len(result):
-                # Select the matched text and apply the desired format
-                cursor.setPosition(result[pos] - 1)  # 不懂为什么得减1,不减就错位了
+            for pos in result:
+                cursor.setPosition(pos - 1)  # 不懂为什么得减1,不减就错位了
                 for i in range(len(key)):
                     cursor.movePosition(QtGui.QTextCursor.Right, 1)
                 cursor.mergeCharFormat(format)
-                pos = pos + 1
-                # Move to the next match
-                # pos = index + regex.matchedLength()
-                # index = regex.indexIn(text, pos)
         print("CLOSE Search_SubstituteForm-->search")
 
     def allSubstitute(self, editform):

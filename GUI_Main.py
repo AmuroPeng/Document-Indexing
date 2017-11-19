@@ -49,6 +49,12 @@ class Ui_MainWindow(object):
         self.Layout_Items = QtWidgets.QGridLayout(self.gridLayoutWidget)
         self.Layout_Items.setContentsMargins(0, 0, 0, 0)
         self.Layout_Items.setObjectName("Layout_Items")
+        self.tabWidget_result = QtWidgets.QTabWidget(self.centralwidget)
+        self.tabWidget_result.setGeometry(QtCore.QRect(30, 260, 391, 261))
+        self.tabWidget_result.setObjectName("tabWidget_result")
+        # self.tab_1 = QtWidgets.QWidget()
+        # self.tab_1.setObjectName("tab_1")
+        # self.tabWidget_result.addTab(self.tab_1, "")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 436, 23))
@@ -105,6 +111,7 @@ class Ui_MainWindow(object):
         self.menubar.addAction(self.menu_help.menuAction())
 
         self.retranslateUi(MainWindow)
+        self.tabWidget_result.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
@@ -113,6 +120,7 @@ class Ui_MainWindow(object):
         self.SearchButton.setText(_translate("MainWindow", "搜索"))
         self.AdvancedSearchButton.setText(_translate("MainWindow", "高级搜索"))
         self.checkBox_selcetAll.setText(_translate("MainWindow", "SELECT/UNSELECT ALL"))
+        # self.tabWidget_result.setTabText(self.tabWidget_result.indexOf(self.tab_1), _translate("MainWindow", "Tab_1"))
         self.menu_file.setTitle(_translate("MainWindow", "文件"))
         self.menu_view.setTitle(_translate("MainWindow", "查看"))
         self.menu_settings.setTitle(_translate("MainWindow", "设置"))
