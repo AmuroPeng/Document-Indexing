@@ -169,16 +169,14 @@ class MainForm(QtWidgets.QMainWindow, GUI_Main.Ui_MainWindow):
         print('时间:', time.strftime("%H%M%S"))
         self.word_dic = {}
         for k, v in file_dic.items():
+            v = v.replace('<br />', '\n')  # 199_1的txt里居然有br!我都傻了,之后全是错位的!还好发现的及时
             v = re.sub(r'[.?!,""></]', ' ', v)
-            v = re.sub(r'<br />', '    ', v)
             for word in v.split(' '):  # 省的实例化split之后的list了,这个好厉害_(:з」∠)_
                 if word == '':
                     continue
                 else:
                     if word not in self.word_dic.keys():
                         self.word_dic[word] = {}
-                    v = v.replace('<br />', '\n')  # 199_1的txt里居然有br!我都傻了,之后全是错位的!还好发现的及时
-                    v = v.replace('<br/>', '\n')
                     kmp_list = Function.Calculate.kmp(word, v)
                     self.word_dic[word][k] = kmp_list  # 这样可以让dict的value是list么?答:应该是可以_(:з」∠)_
         print('word_dic', str(self.word_dic))

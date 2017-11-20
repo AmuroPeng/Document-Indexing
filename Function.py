@@ -102,6 +102,7 @@ class Display(QWidget):
 class Calculate(QWidget):
     def frequency_to_str(self, text, split_key):
         print('调用Function.Calculate >>>>> frequency')
+        text = text.replace('<br />', '\n')  # 199_1的txt里居然有br!我都傻了,之后全是错位的!还好发现的及时
         text = re.sub(r'[.?!,""></]', ' ', text)  # 去除逗号句号
         dic = {}
         for word in text.split(split_key):  # 省的实例化split之后的list了,这个好厉害_(:з」∠)_
@@ -124,8 +125,8 @@ class Calculate(QWidget):
         return list_sorted
 
     def kmp(P, T):
-
-        T = T.replace('<br />', '')
+        print(22212)
+        print(T)
         # 制作部分匹配值表格K[]
         K = []
         t = -1
