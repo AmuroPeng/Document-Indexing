@@ -125,8 +125,6 @@ class Calculate(QWidget):
         return list_sorted
 
     def kmp(P, T):
-        print(22212)
-        print(T)
         # 制作部分匹配值表格K[]
         K = []
         t = -1
@@ -201,6 +199,20 @@ def huffmanEncoding(nodes, root):
                 codes[i] = '1' + codes[i]
             node_tmp = node_tmp.father
     return codes
+
+
+def strip_html(text):  # Delete html tags in text.
+    new_text = " "
+    is_html = False
+    for character in text:
+        if character == "<":
+            is_html = True
+        elif character == ">":
+            is_html = False
+            new_text += " "
+        elif is_html is False:
+            new_text += character
+    return new_text
 
 
 if __name__ == '__main__':

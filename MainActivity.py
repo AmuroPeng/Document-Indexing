@@ -400,6 +400,7 @@ class Top20Form(QtWidgets.QDialog, GUI_Top20.Ui_Dialog):
         for i in file_dic:
             text += file_dic[i]
         _func_cal = Function.Calculate()
+        text=Function.strip_html(text)
         list_sorted = _func_cal.frequency_to_str(text, ' ')  # 没有用kmp是因为不需要得到每个值的具体位置,只需要加1即可,所以kmp更麻烦
         _translate = QtCore.QCoreApplication.translate
         for i in range(0, 19):
