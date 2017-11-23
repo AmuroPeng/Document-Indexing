@@ -170,15 +170,20 @@ class MainForm(QtWidgets.QMainWindow, GUI_Main.Ui_MainWindow):
         self.word_dic = {}
         for k, v in file_dic.items():
             v = v.replace('<br />', '\n')  # 199_1的txt里居然有br!我都傻了,之后全是错位的!还好发现的及时
-            v = re.sub(r'[.?!,""></]', ' ', v)
+            v = re.sub(r'[.?!,""><)(/]', ' ', v)
             for word in v.split(' '):  # 省的实例化split之后的list了,这个好厉害_(:з」∠)_
                 if word == '':
                     continue
                 else:
                     if word not in self.word_dic.keys():
                         self.word_dic[word] = {}
+                    temp = ' '
+                    temp += word
+                    temp += ' '
+                    word = temp
                     kmp_list = Function.Calculate.kmp(word, v)
                     self.word_dic[word][k] = kmp_list  # 这样可以让dict的value是list么?答:应该是可以_(:з」∠)_
+        print(self.word_dic.keys())
         print('word_dic', str(self.word_dic))
         print('时间:', time.strftime("%H%M%S"))
         # self.checkBox_selcetAll.setGeometry(QtCore.QRect(70, 120, 301, 21))
@@ -400,7 +405,7 @@ class Top20Form(QtWidgets.QDialog, GUI_Top20.Ui_Dialog):
         for i in file_dic:
             text += file_dic[i]
         _func_cal = Function.Calculate()
-        text=Function.strip_html(text)
+        text = Function.strip_html(text)
         list_sorted = _func_cal.frequency_to_str(text, ' ')  # 没有用kmp是因为不需要得到每个值的具体位置,只需要加1即可,所以kmp更麻烦
         _translate = QtCore.QCoreApplication.translate
         for i in range(0, 19):
