@@ -14,6 +14,7 @@ import manifest
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QFileDialog
 import re
+import six.moves.cPickle as pickle
 
 
 # logging.config.fileConfig("logging.conf")  # 采用配置文件
@@ -215,9 +216,20 @@ def strip_html(text):  # Delete html tags in text.
     return new_text
 
 
+def save_struct(filepath, struct):  # 保存list,dict,tuple等数据结构
+    with open(filepath, 'wb') as file:
+        pickle.dump(struct, file)
+
+
+def load_struct(filepath):  # 打开list,dict,tuple等数据结构
+    with open(filepath, 'rb') as file:
+        return pickle.load(file)
+
+
 if __name__ == '__main__':
     # chars = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N']
     # freqs = [10,4,2,5,3,4,2,6,4,4,3,7,9,6]
+
     chars_freqs = [('C', 2), ('G', 2), ('E', 3), ('K', 3), ('B', 4),
                    ('F', 4), ('I', 4), ('J', 4), ('D', 5), ('H', 6),
                    ('N', 6), ('L', 7), ('M', 9), ('A', 10)]
@@ -229,3 +241,6 @@ if __name__ == '__main__':
     print(codes)
     for item in zip(chars_freqs, codes):
         print('Character:%s freq:%-2d   encoding: %s' % (item[0][0], item[0][1], item[1]))
+
+    save_struct('11111.pkl', chars_freqs)
+    print(load_struct('11111.pkl'))

@@ -23,25 +23,19 @@
    <widget class="QWidget" name="horizontalLayoutWidget">
     <property name="geometry">
      <rect>
-      <x>60</x>
+      <x>40</x>
       <y>30</y>
-      <width>311</width>
-      <height>41</height>
+      <width>361</width>
+      <height>71</height>
      </rect>
     </property>
     <layout class="QHBoxLayout" name="Layout_Search">
      <item>
-      <widget class="QTextEdit" name="SearchText">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
+      <widget class="QLineEdit" name="SearchText">
        <property name="minimumSize">
         <size>
-         <width>20</width>
-         <height>20</height>
+         <width>0</width>
+         <height>30</height>
         </size>
        </property>
       </widget>
@@ -131,6 +125,8 @@
      <string>查看</string>
     </property>
     <addaction name="importItems"/>
+    <addaction name="loadIndex"/>
+    <addaction name="saveIndex"/>
    </widget>
    <widget class="QMenu" name="menu_settings">
     <property name="title">
@@ -204,7 +200,17 @@
   </action>
   <action name="importItems">
    <property name="text">
-    <string>导入</string>
+    <string>添加文件至索引</string>
+   </property>
+  </action>
+  <action name="loadIndex">
+   <property name="text">
+    <string>导入索引文件</string>
+   </property>
+  </action>
+  <action name="saveIndex">
+   <property name="text">
+    <string>保存索引文件</string>
    </property>
   </action>
  </widget>

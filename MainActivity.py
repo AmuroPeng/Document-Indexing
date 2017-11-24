@@ -43,6 +43,8 @@ class MainForm(QtWidgets.QMainWindow, GUI_Main.Ui_MainWindow):
         self.New.triggered.connect(self.create_file)
         self.SearchButton.clicked.connect(self.adv_search)
         self.importItems.triggered.connect(self.import_Items)
+        self.loadIndex.triggered.connect(self.load_index)
+        self.saveIndex.triggered.connect(self.save_index)
         # self..clicked.connect(self.btn_save)
         # pushbutton = QtGui.QPushButton('Popup Button')
         menu = QtWidgets.QMenu()
@@ -86,7 +88,7 @@ class MainForm(QtWidgets.QMainWindow, GUI_Main.Ui_MainWindow):
 
     def adv_search(self):
         print('MainForm ---> adv_search')
-        keyword = self.SearchText.toPlainText()
+        keyword = self.SearchText.text()
         print(keyword)
         if self.tabWidget_result.count():  # 每次点搜索需要先清空之前的tab在添加
             for i in range(self.tabWidget_result.count()):
@@ -194,6 +196,16 @@ class MainForm(QtWidgets.QMainWindow, GUI_Main.Ui_MainWindow):
         self.checkBox_selcetAll.show()
         print('MainForm <-- importItems')
 
+    def save_index(self):
+        print('MainForm --> save_index')
+        Function.save_struct(manifest.SaveStructPos, self.word_dic)
+        print('MainForm <-- save_index')
+
+    def load_index(self):
+        print('MainForm --> load_index')
+        self.word_dic = Function.load_struct(manifest.SaveStructPos)
+        print('MainForm <-- load_index')
+
 
 class EditForm(QtWidgets.QDialog, GUI_EditFile.Ui_Dialog):
     def __init__(self, filepath):
@@ -221,7 +233,7 @@ class EditForm(QtWidgets.QDialog, GUI_EditFile.Ui_Dialog):
         content = self.textEdit.toPlainText()
         # location = manifest.SaveTempPos  # 需要修改的以后
         # fname = self.MainForm.create_file()
-        print("进入Fun函数")
+        print("进入Function函数")
         save = Function.Edit()
         print('文本内容为:' + content)
         save.save_file(filepath, content)
