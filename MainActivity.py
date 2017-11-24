@@ -106,7 +106,7 @@ class MainForm(QtWidgets.QMainWindow, GUI_Main.Ui_MainWindow):
                     format = QtGui.QTextCharFormat()
                     format.setBackground(QtGui.QBrush(QtGui.QColor("yellow")))
                     for pos in self.word_dic[keyword][path]:
-                        cursor.setPosition(pos - 1)  # 不懂为什么得减1,不减就错位了
+                        cursor.setPosition(pos)  # 这里不需要减一,在索引环节因为前后空格判断时需要加一所以抵消了
                         for i in range(len(keyword)):
                             cursor.movePosition(QtGui.QTextCursor.Right, 1)
                         cursor.mergeCharFormat(format)
@@ -166,7 +166,7 @@ class MainForm(QtWidgets.QMainWindow, GUI_Main.Ui_MainWindow):
         _func_edit = Function.Edit()
         filepaths = _func_edit.open_files()
         file_dic = {filepaths[i]: open(filepaths[i], 'r').read() for i in range(len(filepaths))}
-        print('时间:', time.strftime("%H%M%S"))
+        print('开始加载时间:', time.strftime("%H%M%S"))
         self.word_dic = {}
         for k, v in file_dic.items():
             v = v.replace('<br />', '\n')  # 199_1的txt里居然有br!我都傻了,之后全是错位的!还好发现的及时
@@ -177,15 +177,13 @@ class MainForm(QtWidgets.QMainWindow, GUI_Main.Ui_MainWindow):
                 else:
                     if word not in self.word_dic.keys():
                         self.word_dic[word] = {}
-                    temp = ' '
-                    temp += word
-                    temp += ' '
-                    word = temp
-                    kmp_list = Function.Calculate.kmp(word, v)
+                    temp_word = ' ' + word + ' '  # 保证是按词搜索而不是按字符串搜索
+                    temp_v = v + ' '  # 保证最后一个词如果是keyword可以正常高亮
+                    kmp_list = Function.Calculate.kmp(temp_word, temp_v)
                     self.word_dic[word][k] = kmp_list  # 这样可以让dict的value是list么?答:应该是可以_(:з」∠)_
         print(self.word_dic.keys())
         print('word_dic', str(self.word_dic))
-        print('时间:', time.strftime("%H%M%S"))
+        print('结束加载时间:', time.strftime("%H%M%S"))
         # self.checkBox_selcetAll.setGeometry(QtCore.QRect(70, 120, 301, 21))
         positions = [(i, j) for i in range(5) for j in range(4)]
         for position, path in zip(positions, filepaths):
