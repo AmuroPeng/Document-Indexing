@@ -5,7 +5,6 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change beforePath="$PROJECT_DIR$/123.txt" afterPath="" />
       <change beforePath="$PROJECT_DIR$/321.txt" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/GUI_Main.py" afterPath="$PROJECT_DIR$/GUI_Main.py" />
       <change beforePath="$PROJECT_DIR$/MainActivity.py" afterPath="$PROJECT_DIR$/MainActivity.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -17,11 +16,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="MainActivity.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="MainActivity.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/MainActivity.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="21">
-              <caret line="99" column="43" lean-forward="false" selection-start-line="99" selection-start-column="43" selection-end-line="99" selection-end-column="43" />
+            <state relative-caret-position="280">
+              <caret line="317" column="58" lean-forward="false" selection-start-line="317" selection-start-column="58" selection-end-line="317" selection-end-column="58" />
               <folding>
                 <element signature="e#24#48#0" expanded="true" />
               </folding>
@@ -29,30 +28,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Huffman.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Huffman.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="22" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="manifest.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/manifest.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="14" lean-forward="false" selection-start-line="0" selection-start-column="14" selection-end-line="0" selection-end-column="14" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="GUI_Main.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="GUI_Main.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/GUI_Main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="443">
+            <state relative-caret-position="1071">
               <caret line="51" column="52" lean-forward="false" selection-start-line="51" selection-start-column="52" selection-end-line="51" selection-end-column="52" />
               <folding />
             </state>
@@ -62,8 +41,8 @@
       <file leaf-file-name="Function.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Function.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="4389">
-              <caret line="223" column="34" lean-forward="false" selection-start-line="223" selection-start-column="34" selection-end-line="223" selection-end-column="34" />
+            <state relative-caret-position="289">
+              <caret line="225" column="32" lean-forward="true" selection-start-line="225" selection-start-column="32" selection-end-line="225" selection-end-column="32" />
               <folding>
                 <element signature="e#16#25#0" expanded="true" />
               </folding>
@@ -82,9 +61,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>highligh</find>
-      <find>if</find>
-      <find>return</find>
       <find>setr</find>
       <find>dic</find>
       <find>checkb</find>
@@ -112,6 +88,9 @@
       <find>tabWidget_result</find>
       <find>Tab</find>
       <find>remove</find>
+      <find>pi</find>
+      <find>cle</find>
+      <find>kle</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -137,12 +116,12 @@
         <option value="$PROJECT_DIR$/GUI_Encoding.py" />
         <option value="$PROJECT_DIR$/Function.py" />
         <option value="$PROJECT_DIR$/manifest.py" />
-        <option value="$PROJECT_DIR$/MainActivity.py" />
         <option value="$PROJECT_DIR$/GUI_Main.py" />
+        <option value="$PROJECT_DIR$/MainActivity.py" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
+  <component name="ProjectFrameBounds" extendedState="7">
     <option name="x" value="227" />
     <option name="y" value="133" />
     <option name="width" value="1086" />
@@ -182,6 +161,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
@@ -194,7 +174,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -347,12 +326,13 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1358" height="916" extended-state="6" />
+    <frame x="-8" y="-8" width="1358" height="916" extended-state="7" />
+    <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.23560606" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18636364" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32991013" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.267009" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.267009" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32991013" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32991013" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24961479" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -678,24 +658,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Function.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4389">
-          <caret line="223" column="34" lean-forward="false" selection-start-line="223" selection-start-column="34" selection-end-line="223" selection-end-column="34" />
-          <folding>
-            <element signature="e#16#25#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Huffman.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="22" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/.PyCharmCE2017.3/system/python_stubs/-1652892022/PyQt5/QtWidgets/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="176">
@@ -705,8 +667,9 @@
     </entry>
     <entry file="file://$USER_HOME$/.PyCharmCE2017.3/system/python_stubs/-1652892022/PyQt5/QtWidgets/QTabWidget.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="239">
-          <caret line="340" column="18" lean-forward="false" selection-start-line="340" selection-start-column="8" selection-end-line="340" selection-end-column="18" />
+        <state relative-caret-position="251">
+          <caret line="208" column="29" lean-forward="true" selection-start-line="208" selection-start-column="24" selection-end-line="208" selection-end-column="29" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -718,21 +681,39 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/MainActivity.py">
+    <entry file="file://$PROJECT_DIR$/Huffman.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="21">
-          <caret line="99" column="43" lean-forward="false" selection-start-line="99" selection-start-column="43" selection-end-line="99" selection-end-column="43" />
-          <folding>
-            <element signature="e#24#48#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="168">
+          <caret line="25" column="7" lean-forward="true" selection-start-line="25" selection-start-column="7" selection-end-line="25" selection-end-column="7" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/GUI_Main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="443">
+        <state relative-caret-position="1071">
           <caret line="51" column="52" lean-forward="false" selection-start-line="51" selection-start-column="52" selection-end-line="51" selection-end-column="52" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Function.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="289">
+          <caret line="225" column="32" lean-forward="true" selection-start-line="225" selection-start-column="32" selection-end-line="225" selection-end-column="32" />
+          <folding>
+            <element signature="e#16#25#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/MainActivity.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="280">
+          <caret line="317" column="58" lean-forward="false" selection-start-line="317" selection-start-column="58" selection-end-line="317" selection-end-column="58" />
+          <folding>
+            <element signature="e#24#48#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

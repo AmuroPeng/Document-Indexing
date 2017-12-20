@@ -299,13 +299,27 @@ class Search_SubstituteForm(QtWidgets.QDialog, GUI_Search_Substitute.Ui_Dialog):
         print("CLOSE Search_SubstituteForm-->search")
 
     def allSubstitute(self, editform):
-        print("ENTER Search_SubstituteForm-->allSubstitute")
+        print("Search_SubstituteForm-->allSubstitute")
         old = self.lineEdit_searchContent_2.text()
         self.lineEdit_searchContent.setText(self.lineEdit_searchContent_2.text())  # 同上面方法中的查找,便于多部操作搜索值
         new = self.lineEdit_substituteContent_2.text()
         text = editform.textEdit.toPlainText()
+        editform.textEdit.setText('')#加这么一句可以间接消除之前显示的高光
         editform.textEdit.setText(text.replace(old, new))  # text做replace之后,本身是不变的,只是传一个改变后的值而已
-        print("CLOSE Search_SubstituteForm-->allSubstitute")
+        text = editform.textEdit.toPlainText()
+        result = Function.Calculate.kmp(new, text)
+        print('搜索内容:' + new + '  结果:' + str(result))
+        # Function.Display.highlight(key, result, editform)
+        if new:
+            cursor = editform.textEdit.textCursor()  # 光标
+            format = QtGui.QTextCharFormat()
+            format.setBackground(QtGui.QBrush(QtGui.QColor("yellow")))
+            for pos in result:
+                cursor.setPosition(pos - 1)  # 不懂为什么得减1,不减就错位了
+                for i in range(len(new)):
+                    cursor.movePosition(QtGui.QTextCursor.Right, 1)
+                cursor.mergeCharFormat(format)
+        print("Search_SubstituteForm-->allSubstitute")
 
 
 # class AdvSearchOptForm(QtWidgets.QDialog, GUI_AdvancedSearchOption.Ui_Dialog):
