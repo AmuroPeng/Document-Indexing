@@ -55,10 +55,11 @@ class MainForm(QtWidgets.QMainWindow, GUI_Main.Ui_MainWindow):
     def open_file(self):
         func = Function.Edit()
         filepath = func.open_file()
-        # 显示
-        edit = EditForm(filepath)
-        edit.show()
-        edit.exec_()
+        if filepath:
+            # 显示
+            edit = EditForm(filepath)
+            edit.show()
+            edit.exec_()
 
     def create_file(self):
         create = NewFileForm()
@@ -77,14 +78,15 @@ class MainForm(QtWidgets.QMainWindow, GUI_Main.Ui_MainWindow):
         #     else:
         #         break
         print(fname)
-        func = Function.Edit()
-        func.new_file(fname + ".txt")
-        # 显示编辑窗口
-        filepath = manifest.SaveTempPos + '\\' + fname + ".txt"
-        print(filepath)
-        edit = EditForm(filepath)
-        edit.show()
-        edit.exec_()
+        if fname:
+            func = Function.Edit()
+            func.new_file(fname + ".txt")
+            # 显示编辑窗口
+            filepath = manifest.SaveTempPos + '' + fname + ".txt"
+            print(filepath)
+            edit = EditForm(filepath)
+            edit.show()
+            edit.exec_()
 
     def adv_search(self):
         print('MainForm ---> adv_search')
@@ -108,7 +110,7 @@ class MainForm(QtWidgets.QMainWindow, GUI_Main.Ui_MainWindow):
                 if keyword:
                     cursor = self.textBrowser.textCursor()  # 光标
                     format = QtGui.QTextCharFormat()
-                    format.setBackground(QtGui.QBrush(QtGui.QColor("yellow")))
+                    format.setBackground(QtGui.QBrush(QtGui.QColor("orange")))
                     for pos in self.word_dic[keyword][path]:
                         cursor.setPosition(pos)  # 这里不需要减一,在索引环节因为前后空格判断时需要加一所以抵消了
                         for i in range(len(keyword)):
@@ -167,34 +169,35 @@ class MainForm(QtWidgets.QMainWindow, GUI_Main.Ui_MainWindow):
         print('MainForm --> importItems')
         _func_edit = Function.Edit()
         filepaths = _func_edit.open_files()
-        file_dic = {filepaths[i]: open(filepaths[i], 'r').read() for i in range(len(filepaths))}
-        print('开始加载时间:', time.strftime("%H%M%S"))
-        self.word_dic = {}
-        for k, v in file_dic.items():
-            v = v.replace('<br />', '\n')  # 199_1的txt里居然有br!我都傻了,之后全是错位的!还好发现的及时
-            v = re.sub(r'[.?!,""><)(/]', ' ', v)
-            for word in v.split(' '):  # 省的实例化split之后的list了,这个好厉害_(:з」∠)_
-                if word == '':
-                    continue
-                else:
-                    if word not in self.word_dic.keys():
-                        self.word_dic[word] = {}
-                    temp_word = ' ' + word + ' '  # 保证是按词搜索而不是按字符串搜索
-                    temp_v = v + ' '  # 保证最后一个词如果是keyword可以正常高亮
-                    kmp_list = Function.Calculate.kmp(temp_word, temp_v)
-                    self.word_dic[word][k] = kmp_list  # 这样可以让dict的value是list么?答:应该是可以_(:з」∠)_
-        print(self.word_dic.keys())
-        print('word_dic', str(self.word_dic))
-        print('结束加载时间:', time.strftime("%H%M%S"))
-        # self.checkBox_selcetAll.setGeometry(QtCore.QRect(70, 120, 301, 21))
-        positions = [(i, j) for i in range(5) for j in range(4)]
-        for position, path in zip(positions, filepaths):
-            checkBox = QtWidgets.QCheckBox(os.path.split(path)[1], self)
-            checkBox.filepath = path
-            checkBox.setCheckState(True)
-            self.Layout_Items.addWidget(checkBox, *position)
-        self.checkBox_selcetAll.show()
-        print('MainForm <-- importItems')
+        if filepaths:
+            file_dic = {filepaths[i]: open(filepaths[i], 'r').read() for i in range(len(filepaths))}
+            print('开始加载时间:', time.strftime("%H%M%S"))
+            self.word_dic = {}
+            for k, v in file_dic.items():
+                v = v.replace('<br />', '\n')  # 199_1的txt里居然有br!我都傻了,之后全是错位的!还好发现的及时
+                v = re.sub(r'[.?!,""><)(/]', ' ', v)
+                for word in v.split(' '):  # 省的实例化split之后的list了,这个好厉害_(:з」∠)_
+                    if word == '':
+                        continue
+                    else:
+                        if word not in self.word_dic.keys():
+                            self.word_dic[word] = {}
+                        temp_word = ' ' + word + ' '  # 保证是按词搜索而不是按字符串搜索
+                        temp_v = v + ' '  # 保证最后一个词如果是keyword可以正常高亮
+                        kmp_list = Function.Calculate.kmp(temp_word, temp_v)
+                        self.word_dic[word][k] = kmp_list  # 这样可以让dict的value是list么?答:应该是可以_(:з」∠)_
+            print(self.word_dic.keys())
+            print('word_dic', str(self.word_dic))
+            print('结束加载时间:', time.strftime("%H%M%S"))
+            # self.checkBox_selcetAll.setGeometry(QtCore.QRect(70, 120, 301, 21))
+            positions = [(i, j) for i in range(5) for j in range(4)]
+            for position, path in zip(positions, filepaths):
+                checkBox = QtWidgets.QCheckBox(os.path.split(path)[1], self)
+                checkBox.filepath = path
+                checkBox.setCheckState(True)
+                self.Layout_Items.addWidget(checkBox, *position)
+            self.checkBox_selcetAll.show()
+            print('MainForm <-- importItems')
 
     def save_index(self):
         print('MainForm --> save_index')
@@ -286,11 +289,12 @@ class Search_SubstituteForm(QtWidgets.QDialog, GUI_Search_Substitute.Ui_Dialog):
         print(key + text)
         result = Function.Calculate.kmp(key, text)
         print('搜索内容:' + key + '  结果:' + str(result))
+        editform.textEdit.setText(text)  # 用于刷新高亮
         # Function.Display.highlight(key, result, editform)
         if key:
             cursor = editform.textEdit.textCursor()  # 光标
             format = QtGui.QTextCharFormat()
-            format.setBackground(QtGui.QBrush(QtGui.QColor("yellow")))
+            format.setBackground(QtGui.QBrush(QtGui.QColor("orange")))
             for pos in result:
                 cursor.setPosition(pos - 1)  # 不懂为什么得减1,不减就错位了
                 for i in range(len(key)):
@@ -304,7 +308,7 @@ class Search_SubstituteForm(QtWidgets.QDialog, GUI_Search_Substitute.Ui_Dialog):
         self.lineEdit_searchContent.setText(self.lineEdit_searchContent_2.text())  # 同上面方法中的查找,便于多部操作搜索值
         new = self.lineEdit_substituteContent_2.text()
         text = editform.textEdit.toPlainText()
-        editform.textEdit.setText('')#加这么一句可以间接消除之前显示的高光
+        editform.textEdit.setText('')  # 加这么一句可以间接消除之前显示的高光
         editform.textEdit.setText(text.replace(old, new))  # text做replace之后,本身是不变的,只是传一个改变后的值而已
         text = editform.textEdit.toPlainText()
         result = Function.Calculate.kmp(new, text)
@@ -313,7 +317,7 @@ class Search_SubstituteForm(QtWidgets.QDialog, GUI_Search_Substitute.Ui_Dialog):
         if new:
             cursor = editform.textEdit.textCursor()  # 光标
             format = QtGui.QTextCharFormat()
-            format.setBackground(QtGui.QBrush(QtGui.QColor("yellow")))
+            format.setBackground(QtGui.QBrush(QtGui.QColor("orange")))
             for pos in result:
                 cursor.setPosition(pos - 1)  # 不懂为什么得减1,不减就错位了
                 for i in range(len(new)):
@@ -357,19 +361,20 @@ class EncodingForm(QtWidgets.QDialog, GUI_Encoding.Ui_Dialog):
     def init(self):
         func = Function.Edit()
         filepaths = func.open_file()
-        text = open(filepaths, 'r').read()
-        # for k in range(0, len(filepaths[0])):
-        #     # print('length=' + len(filepaths[0]))  # !!!!!!!有问题
-        #     print("进入循环取text")
-        #     text_temp = open(filepaths[0][k], 'r').read()
-        #     text_temp += '\n\n'
-        #     text += text_temp
-        # print("退出循环取text")
-        self.textEdit.setText(text)
-        self.pushButtonEncode.clicked.connect(lambda: self.encoding(text))
-        self.pushButtonDecode.clicked.connect(self.decoding)
-        # self.pushButtonEncode.clicked.connect()
-        # self.pushButtonDecode.clicked.connect()
+        if filepaths:
+            text = open(filepaths, 'r').read()
+            # for k in range(0, len(filepaths[0])):
+            #     # print('length=' + len(filepaths[0]))  # !!!!!!!有问题
+            #     print("进入循环取text")
+            #     text_temp = open(filepaths[0][k], 'r').read()
+            #     text_temp += '\n\n'
+            #     text += text_temp
+            # print("退出循环取text")
+            self.textEdit.setText(text)
+            self.pushButtonEncode.clicked.connect(lambda: self.encoding(text))
+            self.pushButtonDecode.clicked.connect(self.decoding)
+            # self.pushButtonEncode.clicked.connect()
+            # self.pushButtonDecode.clicked.connect()
 
     def encoding(self, text):
         print('EncodingForm >>>>> encoding')
@@ -422,28 +427,29 @@ class Top20Form(QtWidgets.QDialog, GUI_Top20.Ui_Dialog):
     def init(self):
         _func_edit = Function.Edit()
         filepaths = _func_edit.open_files()
-        file_dic = {filepaths[i]: open(filepaths[i], 'r').read() for i in range(len(filepaths))}
-        print(time.strftime("%M%S"))
-        text = ''
-        # 把选的文章放在一个text里
-        for i in file_dic:
-            text += file_dic[i]
-        _func_cal = Function.Calculate()
-        text = Function.strip_html(text)
-        list_sorted = _func_cal.frequency_to_str(text, ' ')  # 没有用kmp是因为不需要得到每个值的具体位置,只需要加1即可,所以kmp更麻烦
-        _translate = QtCore.QCoreApplication.translate
-        for i in range(0, 19):
-            item = self.tableWidget_Freq.item(i, 0)  # 需要在设计ui时初始化每个item的值,要不然就报错不知道为啥_(:з」∠)_
-            item.setText(_translate("Dialog", str(list_sorted[i][0])))
-            item = self.tableWidget_Freq.item(i, 1)
-            item.setText(_translate("Dialog", str(list_sorted[i][1])))
-            # self.tableWidget_Freq.setItem(i, 0, QTableWidgetItem=list_sorted[i][0])
-            # self.tableWidget_Freq.setItem(i, 1, QTableWidgetItem=list_sorted[i][1])
-        self.textBrowser.setText(str(list_sorted))
-        print(time.strftime("%M%S"))
-        # self.textEdit.setText(filename);
-        # self.pushButtonEncode.clicked.connect()
-        # self.pushButtonDecode.clicked.connect()
+        if filepath:
+            file_dic = {filepaths[i]: open(filepaths[i], 'r').read() for i in range(len(filepaths))}
+            print(time.strftime("%M%S"))
+            text = ''
+            # 把选的文章放在一个text里
+            for i in file_dic:
+                text += file_dic[i]
+            _func_cal = Function.Calculate()
+            text = Function.strip_html(text)
+            list_sorted = _func_cal.frequency_to_str(text, ' ')  # 没有用kmp是因为不需要得到每个值的具体位置,只需要加1即可,所以kmp更麻烦
+            _translate = QtCore.QCoreApplication.translate
+            for i in range(0, 19):
+                item = self.tableWidget_Freq.item(i, 0)  # 需要在设计ui时初始化每个item的值,要不然就报错不知道为啥_(:з」∠)_
+                item.setText(_translate("Dialog", str(list_sorted[i][0])))
+                item = self.tableWidget_Freq.item(i, 1)
+                item.setText(_translate("Dialog", str(list_sorted[i][1])))
+                # self.tableWidget_Freq.setItem(i, 0, QTableWidgetItem=list_sorted[i][0])
+                # self.tableWidget_Freq.setItem(i, 1, QTableWidgetItem=list_sorted[i][1])
+            self.textBrowser.setText(str(list_sorted))
+            print(time.strftime("%M%S"))
+            # self.textEdit.setText(filename);
+            # self.pushButtonEncode.clicked.connect()
+            # self.pushButtonDecode.clicked.connect()
 
 
 if __name__ == "__main__":

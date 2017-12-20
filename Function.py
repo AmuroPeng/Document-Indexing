@@ -29,7 +29,6 @@ class Edit(QWidget):
         # return (lines)
         filename = QFileDialog.getOpenFileName(self, "打开文件", manifest.DocLocation, "Txt files(*.txt)")
         # "open file Dialog "为文件对话框的标题，第三个是打开的默认路径，第四个是文件类型过滤器
-
         print(filename)
         return filename[0]
 
