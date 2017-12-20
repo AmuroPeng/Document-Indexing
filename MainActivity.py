@@ -92,7 +92,9 @@ class MainForm(QtWidgets.QMainWindow, GUI_Main.Ui_MainWindow):
         print(keyword)
         if self.tabWidget_result.count():  # 每次点搜索需要先清空之前的tab在添加
             for i in range(self.tabWidget_result.count()):
-                self.tabWidget_result.removeTab(i)
+                # print('第'+str(i)+'次,移除前是'+str(self.tabWidget_result.count()))
+                self.tabWidget_result.removeTab(0)
+                # print('第'+str(i)+'次,移除后是'+str(self.tabWidget_result.count()))
         if keyword in self.word_dic.keys():
             for path in self.word_dic[keyword].keys():
                 self.tab_1 = QtWidgets.QWidget()
@@ -113,7 +115,7 @@ class MainForm(QtWidgets.QMainWindow, GUI_Main.Ui_MainWindow):
                             cursor.movePosition(QtGui.QTextCursor.Right, 1)
                         cursor.mergeCharFormat(format)
                 # highlight
-                self.tabWidget_result.addTab(self.tab_1, "")
+                self.tabWidget_result.addTab(self.tab_1, '')
                 _translate = QtCore.QCoreApplication.translate
                 # self.textBrowser.setHtml(_translate("MainWindow",
                 #                                     "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
@@ -124,8 +126,6 @@ class MainForm(QtWidgets.QMainWindow, GUI_Main.Ui_MainWindow):
                 self.tabWidget_result.setTabText(self.tabWidget_result.indexOf(self.tab_1),
                                                  _translate("MainWindow", str(os.path.split(path)[1])))
         print('MainForm <--- adv_search')
-
-
 
         # self.centralwidget.setObjectName("centralwidget")
         # self.tabWidget_result = QtWidgets.QTabWidget(self.centralwidget)
