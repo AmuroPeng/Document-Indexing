@@ -1,33 +1,16 @@
 # -*- coding:utf-8 -*-
 
-import Function, Huffman
+import Function
 import os
-import time
-import GUI_Main, GUI_EditFile, GUI_NewFile, GUI_SaveConfirm, GUI_Search_Substitute, GUI_AdvancedSearchOption, \
+import GUI_Main, GUI_EditFile, GUI_NewFile, GUI_Search_Substitute, \
     GUI_Encoding, GUI_Top20
-from PyQt5.QtWidgets import QApplication, QWidget, QToolButton, QMainWindow, QMessageBox
-from PyQt5.QtGui import QIcon
-from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QFont, QIcon, QColor, QKeySequence, QSyntaxHighlighter, QTextCharFormat, QTextCursor
 import sys
-from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QWidget, QApplication, QLabel, QTableWidget, QHBoxLayout, QTableWidgetItem, QComboBox, \
-    QFrame
-from PyQt5.QtGui import QFont, QColor, QBrush, QPixmap
+from PyQt5.QtWidgets import QTableWidgetItem
 import time
 import re
 import manifest
-from PyQt5 import QtWidgets
-from PyQt5 import QtGui, QtCore
-from PyQt5.QtWidgets import QFileDialog
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import QRect, QSize, QMetaObject, QCoreApplication, \
-    QPropertyAnimation
-from PyQt5.QtGui import QFont
-from PyQt5.QtWidgets import QFileDialog
-from PyQt5.QtWidgets import QWidget, QHBoxLayout, QGridLayout, QPushButton, \
-    QApplication, QMainWindow, QTableWidget
+from PyQt5.QtWidgets import QApplication
 
 
 class MainForm(QtWidgets.QMainWindow, GUI_Main.Ui_MainWindow):
@@ -89,6 +72,9 @@ class MainForm(QtWidgets.QMainWindow, GUI_Main.Ui_MainWindow):
             edit.exec_()
 
     def adv_search(self):
+        def key(temp):
+            return len(temp[1])
+
         print('MainForm ---> adv_search')
         keyword = self.SearchText.text()
         print(keyword)
@@ -98,7 +84,10 @@ class MainForm(QtWidgets.QMainWindow, GUI_Main.Ui_MainWindow):
                 self.tabWidget_result.removeTab(0)
                 # print('第'+str(i)+'次,移除后是'+str(self.tabWidget_result.count()))
         if keyword in self.word_dic.keys():
-            for path in self.word_dic[keyword].keys():
+            word_dic_list = [(file, pos) for file, pos in self.word_dic[keyword].items()]
+            word_dic_list.sort(key=key, reverse=True)  # 做这个list为了使addTab时可以按照词频进行展示,左边tab显示频率高的
+            for path, _ in word_dic_list:
+                # for path in self.word_dic[keyword].keys():
                 self.tab_1 = QtWidgets.QWidget()
                 self.tab_1.setObjectName(str(os.path.split(path)[1]))
                 text = open(path, 'r').read()
@@ -173,6 +162,8 @@ class MainForm(QtWidgets.QMainWindow, GUI_Main.Ui_MainWindow):
             file_dic = {filepaths[i]: open(filepaths[i], 'r').read() for i in range(len(filepaths))}
             print('开始加载时间:', time.strftime("%H%M%S"))
             self.word_dic = {}
+            self.word_dict_sorted = {}
+            word_dic_ = dict()
             for k, v in file_dic.items():
                 v = v.replace('<br />', '\n')  # 199_1的txt里居然有br!我都傻了,之后全是错位的!还好发现的及时
                 v = re.sub(r'[.?!,""><)(/]', ' ', v)
@@ -182,11 +173,26 @@ class MainForm(QtWidgets.QMainWindow, GUI_Main.Ui_MainWindow):
                     else:
                         if word not in self.word_dic.keys():
                             self.word_dic[word] = {}
+                            self.word_dict_sorted[word] = {}
                         temp_word = ' ' + word + ' '  # 保证是按词搜索而不是按字符串搜索
                         temp_v = v + ' '  # 保证最后一个词如果是keyword可以正常高亮
                         kmp_list = Function.Calculate.kmp(temp_word, temp_v)
                         self.word_dic[word][k] = kmp_list  # 这样可以让dict的value是list么?答:应该是可以_(:з」∠)_
-            print(self.word_dic.keys())
+                        self.word_dict_sorted[word][k] = kmp_list
+
+                    # list = [(key, value) for key, value in self.word_dic[word].items()]
+                    #
+                    # def key(temp):
+                    #     return len(temp[1])
+                    #
+                    # list.sort(key=key, reverse=True)
+                    # for i in list:
+                    #     word_dic_[i[0]] = i[1]
+                    # print(word_dic_)
+                    # print(sorted(self.word_dic[word].values(), key=lambda x: len(x), reverse=True))
+
+                    # self.word_dict_sorted[word]=sorted(self.word_dic[word].values(), key=lambda x: len(x), reverse=True)
+            # self.word_dic = self.word_dict_sorted
             print('word_dic', str(self.word_dic))
             print('结束加载时间:', time.strftime("%H%M%S"))
             # self.checkBox_selcetAll.setGeometry(QtCore.QRect(70, 120, 301, 21))
@@ -427,7 +433,7 @@ class Top20Form(QtWidgets.QDialog, GUI_Top20.Ui_Dialog):
     def init(self):
         _func_edit = Function.Edit()
         filepaths = _func_edit.open_files()
-        if filepath:
+        if filepaths:
             file_dic = {filepaths[i]: open(filepaths[i], 'r').read() for i in range(len(filepaths))}
             print(time.strftime("%M%S"))
             text = ''
