@@ -241,5 +241,5 @@ if __name__ == '__main__':
     for item in zip(chars_freqs, codes):
         print('Character:%s freq:%-2d   encoding: %s' % (item[0][0], item[0][1], item[1]))
 
-    save_struct('11111.pkl', chars_freqs)
-    print(load_struct('11111.pkl'))
+    # save_struct('11111.pkl', chars_freqs)
+    # print(load_struct('11111.pkl'))

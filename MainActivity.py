@@ -28,8 +28,6 @@ class MainForm(QtWidgets.QMainWindow, GUI_Main.Ui_MainWindow):
         self.importItems.triggered.connect(self.import_Items)
         self.loadIndex.triggered.connect(self.load_index)
         self.saveIndex.triggered.connect(self.save_index)
-        # self..clicked.connect(self.btn_save)
-        # pushbutton = QtGui.QPushButton('Popup Button')
         menu = QtWidgets.QMenu()
         menu.addAction('编码&译码   ', self.advsearch_encode)  # 不知道怎么左对齐,暂时先加空格来手动居中了_(:з」∠)_
         menu.addAction('Top 20   ', self.advsearch_Top20)
@@ -49,17 +47,6 @@ class MainForm(QtWidgets.QMainWindow, GUI_Main.Ui_MainWindow):
         create.show()
         create.exec_()
         fname = create.textNewFile.toPlainText()
-        # 检查新建文件名是否重复
-        # while True:
-        #     if os.path.exists(fname):
-        #         print("Error:'%s' already exists" % fname)
-        #         QMessageBox.information(self,  # 使用infomation信息框
-        #                                 "标题",
-        #                                 "消息",
-        #                                 QMessageBox.Yes | QMessageBox.No)
-        #         # !!!这里加入清空用户填写栏的内容,以及跳转回输入重新输入界面
-        #     else:
-        #         break
         print(fname)
         if fname:
             func = Function.Edit()
@@ -77,7 +64,6 @@ class MainForm(QtWidgets.QMainWindow, GUI_Main.Ui_MainWindow):
 
         print('MainForm ---> adv_search')
         keyword = self.SearchText.text()
-        print(keyword)
         if self.tabWidget_result.count():  # 每次点搜索需要先清空之前的tab在添加
             for i in range(self.tabWidget_result.count()):
                 # print('第'+str(i)+'次,移除前是'+str(self.tabWidget_result.count()))
@@ -108,29 +94,9 @@ class MainForm(QtWidgets.QMainWindow, GUI_Main.Ui_MainWindow):
                 # highlight
                 self.tabWidget_result.addTab(self.tab_1, '')
                 _translate = QtCore.QCoreApplication.translate
-                # self.textBrowser.setHtml(_translate("MainWindow",
-                #                                     "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-                #                                     "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-                #                                     "p, li { white-space: pre-wrap; }\n"
-                #                                     "</style></head><body style=\" font-family:\'SimSun\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
-                #                                     "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">text 1</p></body></html>"))
                 self.tabWidget_result.setTabText(self.tabWidget_result.indexOf(self.tab_1),
                                                  _translate("MainWindow", str(os.path.split(path)[1])))
         print('MainForm <--- adv_search')
-
-        # self.centralwidget.setObjectName("centralwidget")
-        # self.tabWidget_result = QtWidgets.QTabWidget(self.centralwidget)
-        # self.tabWidget_result.setGeometry(QtCore.QRect(20, 150, 131, 101))
-        # self.tabWidget_result.setObjectName("tabWidget_result")
-        # self.tab = QtWidgets.QWidget()
-        # self.tab.setObjectName("tab")
-        # self.tabWidget_result.addTab(self.tab, "")
-        #
-        # self.tabWidget_result.setCurrentIndex(0)
-        #
-        #
-        # _translate = QtCore.QCoreApplication.translate
-        # self.tabWidget_result.setTabText(self.tabWidget_result.indexOf(self.tab), _translate("MainWindow", "Tab 1"))
 
     def advsearch_encode(self):
         print('MainForm >>>>> advsearch_encode')
@@ -145,14 +111,6 @@ class MainForm(QtWidgets.QMainWindow, GUI_Main.Ui_MainWindow):
         top.show()
         top.exec_()
         print('MainForm <<<<< Top20Form')
-
-        # #保存时调出来保存成功,别用新的form,用消息窗口
-        # def msg(self):
-        #     reply = QMessageBox.information(self,  # 使用infomation信息框
-        #                                     "标题",
-        #                                     "消息",
-        #                                     QMessageBox.Yes | QMessageBox.No)
-        #     http: // blog.csdn.net / zd0303 / article / details / 50261481
 
     def import_Items(self):
         print('MainForm --> importItems')
@@ -180,19 +138,6 @@ class MainForm(QtWidgets.QMainWindow, GUI_Main.Ui_MainWindow):
                         self.word_dic[word][k] = kmp_list  # 这样可以让dict的value是list么?答:应该是可以_(:з」∠)_
                         self.word_dict_sorted[word][k] = kmp_list
 
-                    # list = [(key, value) for key, value in self.word_dic[word].items()]
-                    #
-                    # def key(temp):
-                    #     return len(temp[1])
-                    #
-                    # list.sort(key=key, reverse=True)
-                    # for i in list:
-                    #     word_dic_[i[0]] = i[1]
-                    # print(word_dic_)
-                    # print(sorted(self.word_dic[word].values(), key=lambda x: len(x), reverse=True))
-
-                    # self.word_dict_sorted[word]=sorted(self.word_dic[word].values(), key=lambda x: len(x), reverse=True)
-            # self.word_dic = self.word_dict_sorted
             print('word_dic', str(self.word_dic))
             print('结束加载时间:', time.strftime("%H%M%S"))
             # self.checkBox_selcetAll.setGeometry(QtCore.QRect(70, 120, 301, 21))
@@ -232,10 +177,6 @@ class EditForm(QtWidgets.QDialog, GUI_EditFile.Ui_Dialog):
         self.pushButtonSave.clicked.connect(lambda: self.save_text(filepath))
         # 这里加lambda是因为,不加的话,save_text后面带括号,就直接执行这个函数了!
         self.pushButtonSearch.clicked.connect(self.search_text)
-        # key=self.search_text()
-        # !!!!! self.pushButtonSubstitute.clicked.connect(lambda :self.substitute_text(key))
-        # self.Save.clicked.connect(self.btn_open)
-        # self.SaveAs.Led.connect(self.btn_save)
 
     def save_text(self, filepath):
         print("save")
@@ -288,11 +229,10 @@ class Search_SubstituteForm(QtWidgets.QDialog, GUI_Search_Substitute.Ui_Dialog):
         self.pushButton_allSubstitute_2.clicked.connect(lambda: self.allSubstitute(editForm))
 
     def search(self, num, editform):
-        print("ENTER Search_SubstituteForm-->search")
+        print("Search_SubstituteForm-->search")
         key = self.lineEdit_searchContent.text()
         self.lineEdit_searchContent_2.setText(self.lineEdit_searchContent.text())  # 将替换栏的搜索内容和查找栏一致,便于对同一个词进行多个操作
         text = editform.textEdit.toPlainText()  # 得调用主函数建的实例,在用里面的参数
-        print(key + text)
         result = Function.Calculate.kmp(key, text)
         print('搜索内容:' + key + '  结果:' + str(result))
         editform.textEdit.setText(text)  # 用于刷新高亮
@@ -306,7 +246,7 @@ class Search_SubstituteForm(QtWidgets.QDialog, GUI_Search_Substitute.Ui_Dialog):
                 for i in range(len(key)):
                     cursor.movePosition(QtGui.QTextCursor.Right, 1)
                 cursor.mergeCharFormat(format)
-        print("CLOSE Search_SubstituteForm-->search")
+        print("Search_SubstituteForm-->search")
 
     def allSubstitute(self, editform):
         print("Search_SubstituteForm-->allSubstitute")
@@ -332,31 +272,6 @@ class Search_SubstituteForm(QtWidgets.QDialog, GUI_Search_Substitute.Ui_Dialog):
         print("Search_SubstituteForm-->allSubstitute")
 
 
-# class AdvSearchOptForm(QtWidgets.QDialog, GUI_AdvancedSearchOption.Ui_Dialog):
-#     def __init__(self):
-#         super(AdvSearchOptForm, self).__init__()
-#         self.setupUi(self)
-#         self.retranslateUi(self)
-#         self.init()
-#
-#     def init(self):
-#         self.pushButtonEncoding.clicked.connect(self.encode)
-#         self.pushButtonTOP20.clicked.connect(self.Top20)
-#
-#     def encode(self):
-#         encode = EncodingForm()
-#         encode.show()
-#         encode.exec_()
-#         print('encode exit')
-#
-#     def Top20(self):
-#         print('MainForm >>>>> Top20Form')
-#         top = Top20Form()
-#         top.show()
-#         top.exec_()
-#         print('MainForm <<<<< Top20Form')
-
-
 class EncodingForm(QtWidgets.QDialog, GUI_Encoding.Ui_Dialog):
     def __init__(self):
         super(EncodingForm, self).__init__()
@@ -369,26 +284,16 @@ class EncodingForm(QtWidgets.QDialog, GUI_Encoding.Ui_Dialog):
         filepaths = func.open_file()
         if filepaths:
             text = open(filepaths, 'r').read()
-            # for k in range(0, len(filepaths[0])):
-            #     # print('length=' + len(filepaths[0]))  # !!!!!!!有问题
-            #     print("进入循环取text")
-            #     text_temp = open(filepaths[0][k], 'r').read()
-            #     text_temp += '\n\n'
-            #     text += text_temp
-            # print("退出循环取text")
             self.textEdit.setText(text)
             self.pushButtonEncode.clicked.connect(lambda: self.encoding(text))
             self.pushButtonDecode.clicked.connect(self.decoding)
-            # self.pushButtonEncode.clicked.connect()
-            # self.pushButtonDecode.clicked.connect()
+
 
     def encoding(self, text):
         print('EncodingForm >>>>> encoding')
-        print(text)
         _func_cal = Function.Calculate()
         list_sorted = _func_cal.frequency_to_char(text)
         nodes = Function.createNodes([item[1] for item in list_sorted])
-        print([item[1] for item in list_sorted])
         root = Function.createHuffmanTree(nodes)
         huff_code = Function.huffmanEncoding(nodes, root)
         self.tableWidget.setRowCount(len(list_sorted))
@@ -403,7 +308,6 @@ class EncodingForm(QtWidgets.QDialog, GUI_Encoding.Ui_Dialog):
                     textcode += str(huff_code[i])
         self.textEdit.setText(textcode)
         print('EncodingForm <<<<< encoding')
-        print(str(self.tableWidget.item(1, 2).text()))
 
     def decoding(self):
         print('EncodingForm >>> decoding')
@@ -449,13 +353,9 @@ class Top20Form(QtWidgets.QDialog, GUI_Top20.Ui_Dialog):
                 item.setText(_translate("Dialog", str(list_sorted[i][0])))
                 item = self.tableWidget_Freq.item(i, 1)
                 item.setText(_translate("Dialog", str(list_sorted[i][1])))
-                # self.tableWidget_Freq.setItem(i, 0, QTableWidgetItem=list_sorted[i][0])
-                # self.tableWidget_Freq.setItem(i, 1, QTableWidgetItem=list_sorted[i][1])
             self.textBrowser.setText(str(list_sorted))
             print(time.strftime("%M%S"))
-            # self.textEdit.setText(filename);
-            # self.pushButtonEncode.clicked.connect()
-            # self.pushButtonDecode.clicked.connect()
+
 
 
 if __name__ == "__main__":
