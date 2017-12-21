@@ -4,7 +4,7 @@ import os
 import logging
 import logging.config
 import pprint
-import GUI_Main, GUI_EditFile, GUI_NewFile, GUI_SaveConfirm, GUI_SearchInput
+import GUI_Main, GUI_EditFile, GUI_NewFile
 from PyQt5.QtWidgets import QApplication, QWidget, QToolButton, QMainWindow, QMessageBox
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import Qt
